@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+		<title>Brigade Stats</title>
+	</head>
+	<body>
+		<div class="top-nav">
+			<a href="index.html">Home</a>
+		</div>
+
+		<h2 id="title"></h2>
+
+		<p id="loading-text">Loading...</p>
+
+		<div id="stats-content" hidden>
+			Owner: <a id="stat-owner"></a><br />
+			<br />
+			Members:
+			<ul id="stat-members" style="margin-top: 0"></ul>
+		</div>
+
+		<script type="module" src="/src/common.ts"></script>
+		<script type="module" src="/src/blockfront_stats/clan.ts"></script>
+	</body>
+</html>

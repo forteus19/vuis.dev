@@ -10,8 +10,6 @@ export function intToHexColor(n: number): string {
 
 // bf stats
 
-export const BFAPI_HOST = "https://blockfrontapi.vuis.dev";
-
 export type BfApiError = {
 	error: string;
 };
@@ -20,3 +18,13 @@ export type PlayerStub = {
 	uuid: string;
 	name: string;
 };
+
+export const BFAPI_HOST = "https://blockfrontapi.vuis.dev";
+
+export function formatPlayerStub(stub: PlayerStub): string {
+	if (stub.name === "Unknown") {
+		return `Unknown (${stub.uuid})`;
+	} else {
+		return stub.name;
+	}
+}

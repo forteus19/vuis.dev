@@ -1,4 +1,4 @@
-import { BFAPI_HOST, byId, type BfApiError, type PlayerStub } from "../common";
+import { BFAPI_HOST, byId, formatPlayerStub, type BfApiError, type PlayerStub } from "../common";
 
 type Status = {
 	online: boolean;
@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 		const playerListElement = byId("stat-matchplayers");
 		for (const player of match.players) {
 			const matchPlayerLink = document.createElement("a");
-			matchPlayerLink.innerText = player.name === "Unknown" ? `Unknown (${player.uuid})` : player.name;
+			matchPlayerLink.innerText = formatPlayerStub(player);
 			matchPlayerLink.href = `player.html?uuid=${player.uuid}`;
 
 			const matchPlayerListItem = document.createElement("li");

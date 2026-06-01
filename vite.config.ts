@@ -11,6 +11,7 @@ export default defineConfig({
 			input: [
 				resolve(__dirname, "index.html"),
 				resolve(__dirname, "blockfront_stats/armory.html"),
+				resolve(__dirname, "blockfront_stats/clan.html"),
 				resolve(__dirname, "blockfront_stats/index.html"),
 				resolve(__dirname, "blockfront_stats/player.html"),
 				resolve(__dirname, "blockfront_stats/status.html"),
