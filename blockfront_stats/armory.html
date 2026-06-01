@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+		<title>Player Armory</title>
+	</head>
+	<body>
+		<div class="top-nav">
+			<a href="index.html">Home</a>
+			<a id="player-link" hidden>Player</a>
+		</div>
+
+		<h2 id="title"></h2>
+
+		<p id="loading-text">Loading...</p>
+
+		<div id="stats-content" hidden>
+			<p>Skins: <span id="stat-skins"></span></p>
+			<p>
+				<label for="sort-select">Sort: </label>
+				<select id="sort-select">
+					<option value="rarity">RARITY</option>
+					<option value="mint">MINT</option>
+				</select>
+			</p>
+			<p>
+				<label for="filter-select">Filter: </label>
+				<select id="filter-select">
+					<option value="all">ALL</option>
+					<option value="generic">GENERIC</option>
+					<option value="booster">BOOSTER</option>
+					<option value="card">CARD</option>
+					<option value="cape">CAPE</option>
+					<option value="coin">COIN</option>
+					<option value="gun">GUN</option>
+					<option value="hat">HAT</option>
+					<option value="key">KEY</option>
+					<option value="melee">MELEE</option>
+					<option value="armor">ARMOR</option>
+					<option value="case">CASE</option>
+					<option value="sticker">STICKER</option>
+					<option value="name_tag">NAME TAG</option>
+				</select>
+			</p>
+			<p>
+				<label for="dupes-select">Highlight duplicates: </label>
+				<input type="checkbox" id="dupes-select" />
+			</p>
+			<table id="stat-armory"></table>
+		</div>
+
+		<script type="module" src="/src/common.ts"></script>
+		<script type="module" src="/src/blockfront_stats/armory.ts"></script>
+	</body>
+	<style>
+		th,
+		td {
+			padding: 0 5px;
+			width: 85px;
+		}
+		br {
+			display: block;
+			margin: -2px 0;
+		}
+	</style>
+</html>

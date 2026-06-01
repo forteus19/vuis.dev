@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+		<title>Player Stats</title>
+	</head>
+	<body>
+		<div class="top-nav">
+			<a href="index.html">Home</a>
+			<a id="status-link" hidden>Status</a>
+			<a id="inventory-link" hidden>Armory</a>
+			<a id="clan-link" hidden>Brigade</a>
+		</div>
+
+		<h2 id="title"></h2>
+
+		<p id="loading-text">Loading...</p>
+
+		<div id="stats-content" hidden>
+			<div id="banned-message" style="margin-bottom: 12px; color: red" hidden>This player is currently banned.</div>
+			Rank: <span id="stat-prestige" style="color: lime"></span><span id="stat-rank" style="color: white"></span
+			><img src="" alt="[rank icon]" id="stat-rank-icon" style="vertical-align: middle; margin-bottom: 4px; margin-left: 6px" /><br />
+			Progress:
+			<span id="stat-progress-current" style="color: darkgray"></span> / <span id="stat-progress-end" style="color: darkgray"></span><br />
+			<br />
+			Mood: <span id="stat-mood" style="color: darkgray"></span><br />
+			Group: <span id="stat-group"></span><br />
+			<br />
+			Match Karma: <span id="stat-matchkarma" style="color: magenta"></span><br />
+			Time Played: <span id="stat-timeplayed" style="color: darkgray"></span><br />
+			Games: <span id="stat-games" style="color: darkgray"></span><br />
+			Trophies: <span id="stat-trophies" style="color: yellow"></span><br />
+			Achievements: <span id="stat-achievements"></span><span style="color: darkgray">/68</span><br />
+			<br />
+			EXP: <span id="stat-exp" style="color: cyan"></span>
+			<span style="color: darkgray"
+				>(total: <span id="stat-expcumulative" style="color: cyan"></span><span id="stat-exprank" style="color: yellow"></span>)</span
+			><br />
+			K/D: <span id="stat-kd" style="color: lime"></span><br />
+			Headshots: <span id="stat-headshots" style="color: lime"></span><br />
+			K/HS: <span id="stat-khs" style="color: red"></span><br />
+			Kills: <span id="stat-kills" style="color: lime"></span>
+			<span style="color: darkgray">(sb: <span id="stat-sb-score"></span><span id="stat-sb-rank" style="color: yellow"></span>)</span><br />
+			Kill Streak: <span id="stat-killstreak" style="color: lime"></span><br />
+			Fire Kills: <span id="stat-firekills" style="color: lime"></span><br />
+			Back-stabs: <span id="stat-backstabs" style="color: lime"></span><br />
+			Assists: <span id="stat-assists" style="color: yellow"></span><br />
+			No-scopes: <span id="stat-noscopes" style="color: lime"></span><br />
+			Deaths: <span id="stat-deaths" style="color: red"></span><br />
+			Death Streak: <span id="stat-deathstreak" style="color: red"></span><br />
+			First-bloods: <span id="stat-firstbloods" style="color: darkred"></span><br />
+			Prestige Level: <span id="stat-prestigelevel" style="color: yellow"></span><br />
+			Completed Bootcamp:
+			<span id="stat-completedbootcamp" style="color: lime"></span><br />
+			<br />
+			Infected Rounds Won:
+			<span id="stat-infectedroundswon" style="color: red"></span><br />
+			Infected Matches Won:
+			<span id="stat-infectedmatcheswon" style="color: red"></span><br />
+			<br />
+			Bot Kills: <span id="stat-botkills" style="color: dodgerblue"></span><br />
+			Infected Kills: <span id="stat-infectedkills" style="color: lime"></span><br />
+			Vehicle Kills:
+			<span id="stat-vehiclekills" style="color: darkgray"></span>
+
+			<table style="margin-top: 24px">
+				<tr>
+					<th>Class</th>
+					<th>EXP</th>
+				</tr>
+				<tr>
+					<td>Rifleman</td>
+					<td id="stat-cexp-rifleman">0</td>
+				</tr>
+				<tr>
+					<td>Lt. Rifle</td>
+					<td id="stat-cexp-ltrifle">0</td>
+				</tr>
+				<tr>
+					<td>Assault</td>
+					<td id="stat-cexp-assault">0</td>
+				</tr>
+				<tr>
+					<td>Support</td>
+					<td id="stat-cexp-support">0</td>
+				</tr>
+				<tr>
+					<td>Medic</td>
+					<td id="stat-cexp-medic">0</td>
+				</tr>
+				<tr>
+					<td>Sniper</td>
+					<td id="stat-cexp-sniper">0</td>
+				</tr>
+				<tr>
+					<td>Gunner</td>
+					<td id="stat-cexp-gunner">0</td>
+				</tr>
+				<tr>
+					<td>Anti-Tank</td>
+					<td id="stat-cexp-antitank">0</td>
+				</tr>
+				<tr>
+					<td>Specialist</td>
+					<td id="stat-cexp-specialist">0</td>
+				</tr>
+				<tr>
+					<td>Commander</td>
+					<td id="stat-cexp-commander">0</td>
+				</tr>
+			</table>
+		</div>
+
+		<script type="module" src="/src/common.ts"></script>
+		<script type="module" src="/src/blockfront_stats/player.ts"></script>
+	</body>
+</html>

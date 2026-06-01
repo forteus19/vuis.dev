@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+		<title>BlockFront Stats</title>
+	</head>
+	<body>
+		<h2>BlockFront Stats</h2>
+
+		<p>
+			<a href="cloud.html">Cloud stats</a><br />
+			<a href="unofficial_exp.html">Unofficial EXP leaderboard</a>
+		</p>
+
+		<p>
+			<label for="search-input">Name:</label>
+			<input type="text" id="search-input" />
+		</p>
+		<p>
+			<button id="view-stats-button">View stats</button>
+			<button id="view-armory-button">View armory</button>
+		</p>
+
+		<script type="module" src="/src/common.ts"></script>
+		<script type="module" src="/src/blockfront_stats/index.ts"></script>
+	</body>
+</html>
