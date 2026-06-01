@@ -12,16 +12,15 @@ export default defineConfig({
 				resolve(__dirname, "index.html"),
 				resolve(__dirname, "blockfront_stats/armory.html"),
 				resolve(__dirname, "blockfront_stats/index.html"),
-				resolve(__dirname, "blockfront_stats/player.html")
-			]
-		}
+				resolve(__dirname, "blockfront_stats/player.html"),
+				resolve(__dirname, "blockfront_stats/status.html"),
+			],
+		},
 	},
-	plugins: [
-		ViteMinifyPlugin({})
-	],
+	plugins: [ViteMinifyPlugin({})],
 	resolve: {
 		alias: {
-			"@assets": resolve(__dirname, "src/assets")
-		}
-	}
+			"@assets": resolve(__dirname, "src/assets"),
+		},
+	},
 });

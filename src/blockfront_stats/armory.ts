@@ -24,6 +24,7 @@ const dupes: Set<number> = new Set();
 
 document.addEventListener("DOMContentLoaded", async () => {
 	const playerLink = byId<HTMLAnchorElement>("player-link");
+	const statusLink = byId<HTMLAnchorElement>("status-link");
 
 	const titleElement = byId<HTMLHeadingElement>("title");
 	const loadingElement = byId<HTMLParagraphElement>("loading-text");
@@ -38,7 +39,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 	const playerUuid = urlParams.get("uuid");
 	const playerName = urlParams.get("name");
 
-	titleElement.innerText = `Stats for player ${playerName === null ? playerUuid : playerName}`;
+	titleElement.innerText = `Armory for player ${playerName === null ? playerUuid : playerName}`;
 
 	const fetchParams = new URLSearchParams(playerName === null ? { uuid: playerUuid as string } : { name: playerName });
 	fetchParams.append("include_details", "true");
@@ -62,6 +63,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 	playerLink.href = `player.html?uuid=${stats.player.uuid}`;
 	playerLink.hidden = false;
+	statusLink.href = `status.html?uuid=${stats.player.uuid}`;
+	statusLink.hidden = false;
 
 	if (stats.player.name !== "Unknown") {
 		titleElement.innerText = `Armory for player ${stats.player.name}`;
