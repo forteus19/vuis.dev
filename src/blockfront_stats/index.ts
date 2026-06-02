@@ -19,8 +19,11 @@ document.addEventListener("DOMContentLoaded", () => {
 		if (testName(name)) {
 			return;
 		}
+		fetchingText.innerText = "Fetching profile..."
 		fetchingText.hidden = false;
-		fetchUuid(name).then(uuid => document.location.assign(`${hrefBase}?uuid=${uuid}`));
+		fetchUuid(name)
+			.then(uuid => document.location.assign(`${hrefBase}?uuid=${uuid}`))
+			.catch(reason => fetchingText.innerText = `${reason}`);
 	}
 
 	viewStatsButton.addEventListener("click", () => fetchAndVisit("player.html"));
@@ -39,5 +42,11 @@ function testName(name: string): boolean {
 }
 
 async function fetchUuid(name: string): Promise<string> {
-	return fetch(USER_API_ENDPOINT + name).then(res => res.json() as Promise<UserResponse>).then(json => json.uuid);
+	return fetch(USER_API_ENDPOINT + name).then(res => {
+		if (res.ok) {
+			return res.json() as Promise<UserResponse>;
+		} else {
+			throw "user not found";
+		}
+	}).then(json => json.uuid);
 }
