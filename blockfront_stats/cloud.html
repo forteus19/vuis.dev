@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+		<title>Cloud Stats</title>
+	</head>
+	<body>
+		<div class="top-nav">
+			<a href="index.html">Home</a>
+		</div>
+
+		<h2>Stats for cloud</h2>
+
+		<p id="loading-text">Loading...</p>
+
+		<div id="stats-content" hidden>
+			Players online: <span id="stat-playersonline"></span><br />
+
+			<h3>Players per gamemode</h3>
+
+			<table id="stat-gmonline"></table>
+
+			<h3>Scoreboards</h3>
+
+			<table style="float: left; margin-right: 16px" id="stat-scoreboard-players">
+				<tr>
+					<th style="width: 40px">#</th>
+					<th style="width: 160px">Player</th>
+					<th style="width: 130px">Score</th>
+				</tr>
+			</table>
+			<table id="stat-scoreboard-clans">
+				<tr>
+					<th style="width: 40px">#</th>
+					<th style="width: 130px">Brigade</th>
+					<th style="width: 130px">Score</th>
+				</tr>
+			</table>
+		</div>
+
+		<script type="module" src="/src/common.ts"></script>
+		<script type="module" src="/src/blockfront_stats/cloud.ts"></script>
+	</body>
+</html>

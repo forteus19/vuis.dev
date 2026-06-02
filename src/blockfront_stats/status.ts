@@ -1,4 +1,4 @@
-import { BFAPI_HOST, byId, formatPlayerStub, type BfApiError, type PlayerStub } from "../common";
+import { BFAPI_HOST, byId, formatPlayerStub, getGameTypeName, type BfApiError, type GameType, type PlayerStub } from "../common";
 
 type Status = {
 	online: boolean;
@@ -7,7 +7,7 @@ type Status = {
 	match: {
 		uuid: string;
 		map_name: string;
-		game: string;
+		game: GameType;
 		max_players: number;
 		accepting_players: boolean;
 		settings: {
@@ -78,7 +78,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 	if (stats.online && match !== null) {
 		byId("match-content").hidden = false;
 
-		byId("stat-gamemode").innerText = getGamemodeName(match.game);
+		byId("stat-gamemode").innerText = getGameTypeName(match.game);
 		byId("stat-map").innerText = match.map_name;
 		const playerCountElement = byId("stat-players");
 		playerCountElement.innerText = `${match.players.length}/${match.max_players}`;
@@ -115,36 +115,5 @@ function getStatusName(status: Status): string {
 		}
 	} else {
 		return "Offline";
-	}
-}
-
-function getGamemodeName(gamemode: string): string {
-	switch (gamemode) {
-		case "boot":
-			return "Bootcamp";
-		case "dom":
-			return "Domination";
-		case "conq":
-			return "Conquest";
-		case "tdm":
-			return "Team Deathmatch";
-		case "gg":
-			return "Gun Game";
-		case "ffa":
-			return "Free For All";
-		case "inf":
-			return "Infected";
-		case "sg":
-			return "Survival Games";
-		case "ttt":
-			return "Trouble Town";
-		case "def":
-			return "Defusal";
-		case "mov":
-			return "Movie Studio";
-		case "camp":
-			return "Campaign";
-		default:
-			return "Unknown";
 	}
 }

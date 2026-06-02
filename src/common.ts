@@ -19,6 +19,8 @@ export type PlayerStub = {
 	name: string;
 };
 
+export type GameType = "boot" | "dom" | "conq" | "tdm" | "gg" | "ffa" | "inf" | "sg" | "ttt" | "def" | "mov" | "camp" | "lob";
+
 export const BFAPI_HOST = "https://blockfrontapi.vuis.dev";
 export const PRESTIGE_EXP = 253_001;
 
@@ -27,5 +29,38 @@ export function formatPlayerStub(stub: PlayerStub): string {
 		return `Unknown (${stub.uuid})`;
 	} else {
 		return stub.name;
+	}
+}
+
+export function getGameTypeName(gameType: GameType): string {
+	switch (gameType) {
+		case "boot":
+			return "Bootcamp";
+		case "dom":
+			return "Domination";
+		case "conq":
+			return "Conquest";
+		case "tdm":
+			return "Team Deathmatch";
+		case "gg":
+			return "Gun Game";
+		case "ffa":
+			return "Free For All";
+		case "inf":
+			return "Infected";
+		case "sg":
+			return "Survival Games";
+		case "ttt":
+			return "Trouble Town";
+		case "def":
+			return "Defusal";
+		case "mov":
+			return "Movie Studio";
+		case "camp":
+			return "Campaign";
+		case "lob":
+			return "Lobby";
+		default:
+			return "Unknown";
 	}
 }
