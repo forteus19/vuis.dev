@@ -68,18 +68,6 @@ const RANK_THRESHOLDS = [0, 1, 1001, 3001, 6001, 10001, 16001, 23501, 32501, 430
 
 const CLASS_EXP_IDS = ["rifleman", "ltrifle", "assault", "support", "medic", "sniper", "gunner", "antitank", "specialist", "commander"];
 
-function getRankIndex(exp: number): number {
-	let index = -1;
-	for (const threshold of RANK_THRESHOLDS) {
-		if (exp < threshold) {
-			break;
-		} else {
-			index++;
-		}
-	}
-	return index;
-}
-
 document.addEventListener("DOMContentLoaded", async () => {
 	const statusLink = byId<HTMLAnchorElement>("status-link");
 	const inventoryLink = byId<HTMLAnchorElement>("inventory-link");
@@ -90,17 +78,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 	const statsElement = byId<HTMLDivElement>("stats-content");
 
 	const urlParams = new URLSearchParams(window.location.search);
-	if (!urlParams.has("uuid") && !urlParams.has("name")) {
-		titleElement.innerText = "missing uuid/name!";
+	const playerUuid = urlParams.get("uuid");
+	if (playerUuid === null) {
+		titleElement.innerText = "missing uuid!";
 		loadingElement.hidden = true;
 		return;
 	}
-	const playerUuid = urlParams.get("uuid");
-	const playerName = urlParams.get("name");
 
-	titleElement.innerText = `Stats for player ${playerName === null ? playerUuid : playerName}`;
+	titleElement.innerText = `Stats for player ${playerUuid}`;
 
-	const fetchParams = new URLSearchParams(playerName === null ? { uuid: playerUuid as string } : { name: playerName });
+	const fetchParams = new URLSearchParams({ uuid: playerUuid });
 
 	let stats: PlayerStats;
 	try {
@@ -213,3 +200,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 		byId(`stat-cexp-${CLASS_EXP_IDS[classExpEntry.id]}`).innerText = classExpEntry.exp.toLocaleString();
 	}
 });
+
+function getRankIndex(exp: number): number {
+	let index = -1;
+	for (const threshold of RANK_THRESHOLDS) {
+		if (exp < threshold) {
+			break;
+		} else {
+			index++;
+		}
+	}
+	return index;
+}

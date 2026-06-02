@@ -27,17 +27,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 	const statsElement = byId<HTMLDivElement>("stats-content");
 
 	const urlParams = new URLSearchParams(window.location.search);
-	if (!urlParams.has("uuid") && !urlParams.has("name")) {
-		titleElement.innerText = "missing uuid/name!";
+	const playerUuid = urlParams.get("uuid");
+	if (playerUuid === null) {
+		titleElement.innerText = "missing uuid!";
 		loadingElement.hidden = true;
 		return;
 	}
-	const playerUuid = urlParams.get("uuid");
-	const playerName = urlParams.get("name");
 
-	titleElement.innerText = `Status for player ${playerName === null ? playerUuid : playerName}`;
+	titleElement.innerText = `Status for player ${playerUuid}`;
 
-	const fetchParams = new URLSearchParams(playerName === null ? { uuid: playerUuid as string } : { name: playerName });
+	const fetchParams = new URLSearchParams({ uuid: playerUuid });
 
 	let stats: Status;
 	try {
