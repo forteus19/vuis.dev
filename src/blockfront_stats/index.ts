@@ -1,6 +1,6 @@
 import { byId } from "../common";
 
-const usernameRegex = new RegExp("^[a-zA-Z0-9_]{3,16}$");
+const usernameRegex = /^[a-zA-Z0-9_]{3,16}$/;
 
 function testName(name: string): boolean {
 	if (name === "") {

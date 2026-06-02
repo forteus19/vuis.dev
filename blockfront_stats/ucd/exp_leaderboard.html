@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+		<title>Unofficial EXP Leaderboard</title>
+	</head>
+	<body>
+		<div class="top-nav">
+			<a href="../index.html">Home</a>
+		</div>
+
+		<h2>Unofficial EXP leaderboard</h2>
+
+		<p id="loading-text">Loading...</p>
+
+		<div id="stats-content" hidden>
+			Last updated: <span id="stat-lastupdated"></span>
+			<p>
+				<label for="sort-select">Sort: </label>
+				<select id="sort-select">
+					<option value="exp">Total EXP</option>
+					<option value="time">Time Played</option>
+				</select>
+			</p>
+			<p>
+				<label for="page-select">Page: </label>
+				<select id="page-select"></select>
+			</p>
+			<p>
+				<label for="prestige-select">Show theoretical prestige: </label>
+				<input type="checkbox" id="prestige-select" />
+			</p>
+			<table id="stat-leaderboard" style="margin-top: 16px"></table>
+		</div>
+
+		<script type="module" src="/src/common.ts"></script>
+		<script type="module" src="/src/blockfront_stats/ucd/exp_leaderboard.ts"></script>
+	</body>
+	<style>
+		th,
+		td {
+			padding: 0 5px;
+			width: 0;
+		}
+	</style>
+</html>

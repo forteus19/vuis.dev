@@ -20,6 +20,7 @@ export type PlayerStub = {
 };
 
 export const BFAPI_HOST = "https://blockfrontapi.vuis.dev";
+export const PRESTIGE_EXP = 253_001;
 
 export function formatPlayerStub(stub: PlayerStub): string {
 	if (stub.name === "Unknown") {

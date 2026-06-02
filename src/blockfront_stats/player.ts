@@ -1,4 +1,4 @@
-import { BFAPI_HOST, byId, intToHexColor, type BfApiError } from "../common";
+import { BFAPI_HOST, byId, intToHexColor, PRESTIGE_EXP, type BfApiError } from "../common";
 
 const RANK_IMAGES = Object.entries(import.meta.glob("@assets/bf_ranks/*.png", { eager: true, query: "?url", import: "default" }))
 	.sort(([a], [b]) => a.localeCompare(b, undefined, { numeric: true }))
@@ -65,7 +65,6 @@ type Punishments = {
 };
 
 const RANK_THRESHOLDS = [0, 1, 1001, 3001, 6001, 10001, 16001, 23501, 32501, 43001, 55001, 69001, 85001, 103001, 123001, 145001, 169001, 195001, 223001, 253001];
-const PRESTIGE_EXP = 253001;
 
 const CLASS_EXP_IDS = ["rifleman", "ltrifle", "assault", "support", "medic", "sniper", "gunner", "antitank", "specialist", "commander"];
 
