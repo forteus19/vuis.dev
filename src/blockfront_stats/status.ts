@@ -1,4 +1,4 @@
-import { BFAPI_HOST, byId, formatPlayerStub, getGameTypeName, type BfApiError, type GameType, type PlayerStub } from "../common";
+import { BFAPI_HOST, byId, formatPlayerStub, getGameTypeName, retrieveLastUsername, setLastSearch, type BfApiError, type GameType, type PlayerStub } from "../common";
 
 type Status = {
 	online: boolean;
@@ -34,7 +34,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 		return;
 	}
 
-	titleElement.innerText = `Status for player ${playerUuid}`;
+	const lastUsername = retrieveLastUsername(playerUuid);
+	titleElement.innerText = `Status for player ${lastUsername !== null ? lastUsername : playerUuid}`;
 
 	const fetchParams = new URLSearchParams({ uuid: playerUuid });
 
@@ -55,14 +56,18 @@ document.addEventListener("DOMContentLoaded", async () => {
 		return;
 	}
 
+	if (stats.player.name !== "Unknown") {
+		setLastSearch({
+			uuid: stats.player.uuid,
+			name: stats.player.name,
+		});
+		titleElement.innerText = `Status for player ${stats.player.name}`;
+	}
+
 	playerLink.href = `player.html?uuid=${stats.player.uuid}`;
 	playerLink.hidden = false;
 	inventoryLink.href = `armory.html?uuid=${stats.player.uuid}`;
 	inventoryLink.hidden = false;
-
-	if (stats.player.name !== "Unknown") {
-		titleElement.innerText = `Status for player ${stats.player.name}`;
-	}
 
 	loadingElement.hidden = true;
 	statsElement.hidden = false;

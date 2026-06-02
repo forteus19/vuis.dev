@@ -24,11 +24,40 @@ export type GameType = "boot" | "dom" | "conq" | "tdm" | "gg" | "ffa" | "inf" | 
 export const BFAPI_HOST = "https://blockfrontapi.vuis.dev";
 export const PRESTIGE_EXP = 253_001;
 
+const LAST_SEARCH_KEY = "lastSearch";
+
 export function formatPlayerStub(stub: PlayerStub): string {
 	if (stub.name === "Unknown") {
 		return `Unknown (${stub.uuid})`;
 	} else {
 		return stub.name;
+	}
+}
+
+export function getLastSearch(): PlayerStub | null {
+	const lastSearch = sessionStorage.getItem(LAST_SEARCH_KEY);
+	try {
+		return lastSearch !== null ? JSON.parse(lastSearch) : null;
+	} catch (e) {
+		return null;
+	}
+}
+
+export function setLastSearch(stub: PlayerStub) {
+	sessionStorage.setItem(LAST_SEARCH_KEY, JSON.stringify(stub));
+}
+
+export function clearLastSearch() {
+	sessionStorage.removeItem(LAST_SEARCH_KEY);
+}
+
+export function retrieveLastUsername(expectedUuid: string): string | null {
+	const lastSearch = getLastSearch();
+	if (lastSearch !== null && lastSearch.uuid === expectedUuid) {
+		return lastSearch.name;
+	} else {
+		clearLastSearch();
+		return null;
 	}
 }
 

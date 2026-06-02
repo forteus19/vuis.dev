@@ -1,10 +1,11 @@
-import { byId } from "../common";
+import { byId, setLastSearch } from "../common";
 
 const USERNAME_REGEX = /^[a-zA-Z0-9_]{3,16}$/;
 const USER_API_ENDPOINT = "https://api.ashcon.app/mojang/v2/user/";
 
 type UserResponse = {
 	uuid: string;
+	username: string;
 	// dont care about other fields
 };
 
@@ -19,11 +20,17 @@ document.addEventListener("DOMContentLoaded", () => {
 		if (testName(name)) {
 			return;
 		}
-		fetchingText.innerText = "Fetching profile..."
+		fetchingText.innerText = "Fetching profile...";
 		fetchingText.hidden = false;
-		fetchUuid(name)
-			.then(uuid => document.location.assign(`${hrefBase}?uuid=${uuid}`))
-			.catch(reason => fetchingText.innerText = `${reason}`);
+		fetchProfile(name)
+			.then((profile) => {
+				setLastSearch({
+					uuid: profile.uuid,
+					name: profile.username,
+				});
+				document.location.assign(`${hrefBase}?uuid=${profile.uuid}`);
+			})
+			.catch((reason) => (fetchingText.innerText = `${reason}`));
 	}
 
 	viewStatsButton.addEventListener("click", () => fetchAndVisit("player.html"));
@@ -41,12 +48,12 @@ function testName(name: string): boolean {
 	}
 }
 
-async function fetchUuid(name: string): Promise<string> {
-	return fetch(USER_API_ENDPOINT + name).then(res => {
+async function fetchProfile(name: string): Promise<UserResponse> {
+	return fetch(USER_API_ENDPOINT + name).then((res) => {
 		if (res.ok) {
 			return res.json() as Promise<UserResponse>;
 		} else {
 			throw "user not found";
 		}
-	}).then(json => json.uuid);
+	});
 }

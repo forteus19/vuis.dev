@@ -1,4 +1,4 @@
-import { BFAPI_HOST, byId, intToHexColor, PRESTIGE_EXP, type BfApiError } from "../common";
+import { BFAPI_HOST, byId, intToHexColor, PRESTIGE_EXP, retrieveLastUsername, setLastSearch, type BfApiError } from "../common";
 
 const RANK_IMAGES = Object.entries(import.meta.glob("@assets/bf_ranks/*.png", { eager: true, query: "?url", import: "default" }))
 	.sort(([a], [b]) => a.localeCompare(b, undefined, { numeric: true }))
@@ -85,7 +85,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 		return;
 	}
 
-	titleElement.innerText = `Stats for player ${playerUuid}`;
+	const lastUsername = retrieveLastUsername(playerUuid);
+	titleElement.innerText = `Stats for player ${lastUsername !== null ? lastUsername : playerUuid}`;
 
 	const fetchParams = new URLSearchParams({ uuid: playerUuid });
 
@@ -110,6 +111,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 		loadingElement.innerText = "user not found";
 		return;
 	}
+
+	setLastSearch({
+		uuid: stats.uuid,
+		name: stats.username,
+	});
 
 	statusLink.href = `status.html?uuid=${stats.uuid}`;
 	statusLink.hidden = false;
