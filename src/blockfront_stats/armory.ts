@@ -92,11 +92,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 	findDupes();
 
-	byId<HTMLSelectElement>("sort-select").addEventListener("change", () => buildTable());
-	byId<HTMLSelectElement>("filter-select").addEventListener("change", () => buildTable());
-	byId<HTMLInputElement>("dupes-select").addEventListener("change", () => buildTable());
+	byId<HTMLSelectElement>("sort-select").addEventListener("change", () => buildTable(true));
+	byId<HTMLSelectElement>("filter-select").addEventListener("change", () => buildTable(false));
+	byId<HTMLInputElement>("dupes-select").addEventListener("change", () => buildTable(false));
 
-	buildTable();
+	buildTable(true);
 });
 
 function findDupes() {
@@ -115,21 +115,23 @@ function findDupes() {
 	}
 }
 
-function buildTable() {
+function buildTable(sort: boolean) {
 	if (inventory === null) {
 		return;
 	}
 
-	let itemComparator: (a: Item, b: Item) => number;
-	switch (byId<HTMLSelectElement>("sort-select").value) {
-		default:
-			itemComparator = getRarityComparator();
-			break;
-		case "mint":
-			itemComparator = getMintComparator();
-			break;
+	if (sort) {
+		let itemComparator: (a: Item, b: Item) => number;
+		switch (byId<HTMLSelectElement>("sort-select").value) {
+			default:
+				itemComparator = getRarityComparator();
+				break;
+			case "mint":
+				itemComparator = getMintComparator();
+				break;
+		}
+		inventory.sort(itemComparator);
 	}
-	inventory.sort(itemComparator);
 
 	const filterSelect = byId<HTMLSelectElement>("filter-select");
 	const filter = filterSelect.value === "all" ? null : filterSelect.value;
@@ -138,9 +140,7 @@ function buildTable() {
 
 	const armoryTable = byId<HTMLTableElement>("stat-armory");
 
-	armoryTable.replaceChildren();
-
-	armoryTable.appendChild(buildHeaderRow());
+	armoryTable.replaceChildren(buildHeaderRow());
 	for (const item of inventory) {
 		if (filter === null || filter === item.type) {
 			armoryTable.appendChild(buildItemRow(item, highlightDupes));

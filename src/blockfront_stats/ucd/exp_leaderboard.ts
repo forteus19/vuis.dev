@@ -56,37 +56,37 @@ document.addEventListener("DOMContentLoaded", async () => {
 		pageSelect.appendChild(pageOption);
 	}
 
-	byId<HTMLSelectElement>("sort-select").addEventListener("change", () => buildTable());
-	pageSelect.addEventListener("change", () => buildTable());
-	byId<HTMLInputElement>("prestige-select").addEventListener("change", () => buildTable());
+	byId<HTMLSelectElement>("sort-select").addEventListener("change", () => buildTable(true));
+	pageSelect.addEventListener("change", () => buildTable(false));
+	byId<HTMLInputElement>("prestige-select").addEventListener("change", () => buildTable(false));
 
-	buildTable();
+	buildTable(true);
 });
 
-function buildTable() {
+function buildTable(sort: boolean) {
 	if (data === null) {
 		return;
 	}
 
-	let entryComparator: (a: LeaderboardEntry, b: LeaderboardEntry) => number;
-	switch (byId<HTMLSelectElement>("sort-select").value) {
-		default:
-			entryComparator = getTotalExpComparator();
-			break;
-		case "time":
-			entryComparator = getTimePlayedComparator();
-			break;
+	if (sort) {
+		let entryComparator: (a: LeaderboardEntry, b: LeaderboardEntry) => number;
+		switch (byId<HTMLSelectElement>("sort-select").value) {
+			default:
+				entryComparator = getTotalExpComparator();
+				break;
+			case "time":
+				entryComparator = getTimePlayedComparator();
+				break;
+		}
+		data.sort(entryComparator);
 	}
-	data.sort(entryComparator);
 
 	const page = parseInt(byId<HTMLSelectElement>("page-select").value);
 	const theoreticalPrestige = byId<HTMLInputElement>("prestige-select").checked;
 
 	const leaderboardTable = byId<HTMLTableElement>("stat-leaderboard");
 
-	leaderboardTable.replaceChildren();
-
-	leaderboardTable.appendChild(buildHeaderRow());
+	leaderboardTable.replaceChildren(buildHeaderRow());
 	for (const [i, entry] of data.slice(page * 50, (page + 1) * 50).entries()) {
 		leaderboardTable.appendChild(buildEntryRow(entry, i + page * 50 + 1, theoreticalPrestige));
 	}
@@ -158,14 +158,10 @@ function buildEntryRow(entry: LeaderboardEntry, place: number, theoreticalPresti
 function decodeBase64Uuid(encodedUuid: string): string {
 	const base64 = encodedUuid.replaceAll("-", "+").replaceAll("_", "/") + "==";
 	const binary = atob(base64);
-	const bytes = Uint8Array.from(binary, c => c.charCodeAt(0));
-	const hex = [...bytes].map(b => b.toString(16).padStart(2, "0")).join("");
+	const bytes = Uint8Array.from(binary, (c) => c.charCodeAt(0));
+	const hex = [...bytes].map((b) => b.toString(16).padStart(2, "0")).join("");
 
-	return hex.substring(0, 8) + "-" +
-		hex.substring(8, 12) + "-" +
-		hex.substring(12, 16) + "-" +
-		hex.substring(16, 20) + "-" +
-		hex.substring(20)
+	return hex.substring(0, 8) + "-" + hex.substring(8, 12) + "-" + hex.substring(12, 16) + "-" + hex.substring(16, 20) + "-" + hex.substring(20);
 }
 
 function getPrestigeColor(prestige: number): string {
