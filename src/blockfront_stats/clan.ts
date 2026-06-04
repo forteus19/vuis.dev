@@ -1,4 +1,5 @@
 import { BFAPI_HOST, byId, formatPlayerStub, type BfApiError, type PlayerStub } from "../common";
+import { createAnchor, createListItem } from "../dom_util";
 
 type Clan = {
 	uuid: string;
@@ -52,13 +53,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 	const membersElement = byId("stat-members");
 	for (const member of stats.members) {
-		const memberLink = document.createElement("a");
-		memberLink.innerText = formatPlayerStub(member);
-		memberLink.href = `player.html?uuid=${member.uuid}`;
-
-		const memberListItem = document.createElement("li");
-		memberListItem.appendChild(memberLink);
-
-		membersElement.appendChild(memberListItem);
+		membersElement.appendChild(createListItem(createAnchor(formatPlayerStub(member), `player.html?uuid=${member.uuid}`)));
 	}
 });

@@ -1,4 +1,5 @@
 import { BFAPI_HOST, byId, intToHexColor, PRESTIGE_EXP, retrieveLastUsername, setLastSearch, type BfApiError } from "../common";
+import { createRow } from "../dom_util";
 
 const RANK_IMAGES = Object.entries(import.meta.glob("@assets/bf_ranks/*.png", { eager: true, query: "?url", import: "default" }))
 	.sort(([a], [b]) => a.localeCompare(b, undefined, { numeric: true }))
@@ -8,10 +9,7 @@ type PlayerStats = {
 	uuid: string;
 	username: string;
 	mood: string | null;
-	class_exp: {
-		id: number;
-		exp: number;
-	}[];
+	class_exp: ClassExpEntry[];
 	exp: number;
 	rank: string;
 	trophies: number;
@@ -58,15 +56,22 @@ type PlayerStats = {
 	};
 };
 
+type ClassExpEntry = {
+	id: number;
+	exp: number;
+};
+
 type Punishments = {
 	warning?: number;
 	mute?: number;
 	ban?: number;
 };
 
-const RANK_THRESHOLDS = [0, 1, 1001, 3001, 6001, 10001, 16001, 23501, 32501, 43001, 55001, 69001, 85001, 103001, 123001, 145001, 169001, 195001, 223001, 253001];
+const RANK_THRESHOLDS = [0, 1, 1_001, 3_001, 6_001, 10_001, 16_001, 23_501, 32_501, 43_001, 55_001, 69_001, 85_001, 103_001, 123_001, 145_001, 169_001, 195_001, 223_001, 253_001];
 
-const CLASS_EXP_IDS = ["rifleman", "ltrifle", "assault", "support", "medic", "sniper", "gunner", "antitank", "specialist", "commander"];
+const CLASS_NAMES = ["Rifleman", "Lt. Rifle", "Assault", "Support", "Medic", "Sniper", "Gunner", "Anti-Tank", "Specialist", "Commander"];
+
+let classExpToggled = false;
 
 document.addEventListener("DOMContentLoaded", async () => {
 	const statusLink = byId<HTMLAnchorElement>("status-link");
@@ -199,12 +204,15 @@ document.addEventListener("DOMContentLoaded", async () => {
 	byId("stat-infectedkills").innerText = stats.infected_kills.toLocaleString();
 	byId("stat-vehiclekills").innerText = stats.vehicle_kills.toLocaleString();
 
-	for (const classExpEntry of stats.class_exp) {
-		if (classExpEntry.id < 0 || classExpEntry.id >= CLASS_EXP_IDS.length) {
-			console.error("unknown class id: %d", classExpEntry.id);
-		}
-		byId(`stat-cexp-${CLASS_EXP_IDS[classExpEntry.id]}`).innerText = classExpEntry.exp.toLocaleString();
-	}
+	const classExpTable = byId<HTMLTableElement>("stat-cexp");
+	buildClassExpTable(classExpTable, stats.class_exp);
+
+	byId<HTMLButtonElement>("stat-cexp-toggle").addEventListener("click", function () {
+		classExpToggled = !classExpToggled;
+
+		classExpTable.hidden = !classExpToggled;
+		this.innerText = `${classExpToggled ? "Hide" : "Show"} Class EXP`;
+	});
 });
 
 function getRankIndex(exp: number): number {
@@ -217,4 +225,19 @@ function getRankIndex(exp: number): number {
 		}
 	}
 	return index;
+}
+
+function buildClassExpTable(table: HTMLTableElement, entries: ClassExpEntry[]) {
+	const sortedEntries = [...entries].sort((a, b) => a.id - b.id);
+
+	table.replaceChildren(createRow({ header: true }, "Class", "EXP"));
+
+	for (const entry of sortedEntries) {
+		if (entry.id < 0 || entry.id >= CLASS_NAMES.length) {
+			console.error("unknown class id: %d", entry.id);
+			continue;
+		}
+
+		table.appendChild(createRow({}, CLASS_NAMES[entry.id], entry.exp.toLocaleString()));
+	}
 }

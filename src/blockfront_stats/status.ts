@@ -1,4 +1,5 @@
 import { BFAPI_HOST, byId, formatPlayerStub, getGameTypeName, retrieveLastUsername, setLastSearch, type BfApiError, type GameType, type PlayerStub } from "../common";
+import { createAnchor, createListItem } from "../dom_util";
 
 type Status = {
 	online: boolean;
@@ -92,14 +93,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 		const playerListElement = byId("stat-matchplayers");
 		for (const player of match.players) {
-			const matchPlayerLink = document.createElement("a");
-			matchPlayerLink.innerText = formatPlayerStub(player);
-			matchPlayerLink.href = `player.html?uuid=${player.uuid}`;
-
-			const matchPlayerListItem = document.createElement("li");
-			matchPlayerListItem.appendChild(matchPlayerLink);
-
-			playerListElement.appendChild(matchPlayerListItem);
+			playerListElement.appendChild(createListItem(createAnchor(formatPlayerStub(player), `player.html?uuid=${player.uuid}`)));
 		}
 	}
 });

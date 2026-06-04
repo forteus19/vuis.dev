@@ -1,0 +1,80 @@
+export function createBreak(): HTMLBRElement {
+	return document.createElement("br");
+}
+
+function createGenericText(tagName: string, text: string, color?: string): HTMLElement {
+	const element = document.createElement(tagName);
+	element.innerText = text;
+	if (color !== undefined) {
+		element.style.color = color;
+	}
+
+	return element;
+}
+
+export function createBold(text: string, color?: string): HTMLElement {
+	return createGenericText("b", text, color);
+}
+
+export function createItalic(text: string, color?: string): HTMLElement {
+	return createGenericText("i", text, color);
+}
+
+export function createAnchor(text: string, href: string, color?: string): HTMLAnchorElement {
+	const element = createGenericText("a", text, color) as HTMLAnchorElement;
+	element.href = href;
+
+	return element;
+}
+
+export function createListItem(contents: Node): HTMLLIElement {
+	const element = document.createElement("li");
+	element.appendChild(contents);
+
+	return element;
+}
+
+export type Contents = string | Node | (string | Node)[];
+export type StyledContents = {
+	contents: Contents;
+	color?: string;
+	width?: string;
+};
+
+function handleContents(element: HTMLElement, contents: Contents) {
+	if (typeof contents === "string") {
+		element.innerText = contents;
+	} else if (Array.isArray(contents)) {
+		element.append(...contents);
+	} else {
+		element.appendChild(contents);
+	}
+}
+
+export function createRow(options: { header?: boolean; color?: string }, ...columns: (Contents | StyledContents)[]): HTMLTableRowElement {
+	const row = document.createElement("tr");
+
+	for (const column of columns) {
+		const element = document.createElement(options.header !== undefined && options.header ? "th" : "td");
+
+		if (typeof column === "object" && "contents" in column) {
+			handleContents(element, column.contents);
+			if (column.color !== undefined) {
+				element.style.color = column.color;
+			}
+			if (column.width !== undefined) {
+				element.style.width = column.width;
+			}
+		} else {
+			handleContents(element, column);
+		}
+
+		row.appendChild(element);
+	}
+
+	if (options.color !== undefined) {
+		row.style.backgroundColor = options.color;
+	}
+
+	return row;
+}

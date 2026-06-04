@@ -1,4 +1,5 @@
 import { BFAPI_HOST, byId, PRESTIGE_EXP, type BfApiError } from "../../common";
+import { createAnchor, createBold, createRow } from "../../dom_util";
 
 type Leaderboard = {
 	last_updated: string;
@@ -93,66 +94,28 @@ function buildTable(sort: boolean) {
 }
 
 function buildHeaderRow(): HTMLTableRowElement {
-	const placeColumn = document.createElement("th");
-	placeColumn.innerText = "#";
-	placeColumn.style.width = "40px";
-
-	const prestigeColumn = document.createElement("th");
-	prestigeColumn.innerText = "P";
-	prestigeColumn.style.width = "40px";
-
-	const nameColumn = document.createElement("th");
-	nameColumn.innerText = "Name";
-	nameColumn.style.width = "170px";
-
-	const expColumn = document.createElement("th");
-	expColumn.innerText = "Total EXP";
-	expColumn.style.width = "120px";
-
-	const timePlayedColumn = document.createElement("th");
-	timePlayedColumn.innerText = "Time Played";
-	timePlayedColumn.style.width = "120px";
-
-	const row = document.createElement("tr");
-	row.append(placeColumn, prestigeColumn, nameColumn, expColumn, timePlayedColumn);
-
-	return row;
+	return createRow(
+		{ header: true },
+		{ contents: "#", width: "40px" },
+		{ contents: "P", width: "40px" },
+		{ contents: "Name", width: "170px" },
+		{ contents: "Total EXP", width: "120px" },
+		{ contents: "Time Played", width: "120px" },
+	);
 }
 
 function buildEntryRow(entry: LeaderboardEntry, place: number, theoreticalPrestige: boolean): HTMLTableRowElement {
 	const isGeneral = entry[2] - entry[3] * PRESTIGE_EXP > PRESTIGE_EXP;
 	const prestige = theoreticalPrestige ? getTheoreticalPrestige(entry[2]) : entry[3];
 
-	const placeBold = document.createElement("b");
-	placeBold.innerText = place.toLocaleString();
-	const placeColumn = document.createElement("td");
-	placeColumn.appendChild(placeBold);
-
-	const prestigeBold = document.createElement("b");
-	prestigeBold.innerText = `${prestige}${isGeneral && !theoreticalPrestige ? "*" : ""}`;
-	prestigeBold.style.color = getPrestigeColor(prestige);
-	const prestigeColumn = document.createElement("td");
-	prestigeColumn.appendChild(prestigeBold);
-
-	const nameLink = document.createElement("a");
-	nameLink.innerText = entry[1];
-	nameLink.href = `../player.html?uuid=${decodeBase64Uuid(entry[0])}`;
-	if (entry[4] !== 0) {
-		nameLink.style.color = "#a9d3ae";
-	}
-	const nameColumn = document.createElement("td");
-	nameColumn.appendChild(nameLink);
-
-	const expColumn = document.createElement("td");
-	expColumn.innerText = entry[2].toLocaleString();
-
-	const timePlayedColumn = document.createElement("td");
-	timePlayedColumn.innerText = `${(entry[5] / 3600).toFixed(1)}h`;
-
-	const row = document.createElement("tr");
-	row.append(placeColumn, prestigeColumn, nameColumn, expColumn, timePlayedColumn);
-
-	return row;
+	return createRow(
+		{},
+		createBold(place.toLocaleString()),
+		createBold(`${prestige}${isGeneral && !theoreticalPrestige ? "*" : ""}`, getPrestigeColor(prestige)),
+		createAnchor(entry[1], `../player.html?uuid=${decodeBase64Uuid(entry[0])}`, entry[4] !== 0 ? "#a9d3ae" : undefined),
+		entry[2].toLocaleString(),
+		`${(entry[5] / 3600).toFixed(1)}h`,
+	);
 }
 
 function decodeBase64Uuid(encodedUuid: string): string {

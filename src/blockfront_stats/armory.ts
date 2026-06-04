@@ -1,4 +1,5 @@
 import { BFAPI_HOST, byId, retrieveLastUsername, setLastSearch, type BfApiError, type PlayerStub } from "../common";
+import { createBreak, createItalic, createRow } from "../dom_util";
 
 type PlayerInventory = {
 	inventory: Item[];
@@ -149,57 +150,19 @@ function buildTable(sort: boolean) {
 }
 
 function buildHeaderRow(): HTMLTableRowElement {
-	const typeColumn = document.createElement("th");
-	typeColumn.innerText = "Type";
-
-	const itemColumn = document.createElement("th");
-	itemColumn.innerText = "Item";
-	itemColumn.style.width = "320px";
-
-	const rarityColumn = document.createElement("th");
-	rarityColumn.innerText = "Rarity";
-
-	const mintColumn = document.createElement("th");
-	mintColumn.innerText = "Mint";
-
-	const row = document.createElement("tr");
-	row.append(typeColumn, itemColumn, rarityColumn, mintColumn);
-
-	return row;
+	return createRow({ header: true }, "Type", { contents: "Item", width: "320px" }, "Rarity", "Mint");
 }
 
 function buildItemRow(item: Item, highlightDupes: boolean): HTMLTableRowElement {
 	const rarityColor = RARITY_COLORS[getRarityIndex(item.rarity)];
 
-	const typeColumn = document.createElement("td");
-	typeColumn.innerText = item.type.replaceAll("_", " ").toUpperCase();
-
-	const itemColumn = document.createElement("td");
-	itemColumn.innerText = item.display_name;
-	if (item.name_tag !== undefined) {
-		const nameTagElement = document.createElement("i");
-		nameTagElement.innerText = `"${item.name_tag}"`;
-
-		itemColumn.append(document.createElement("br"), nameTagElement);
-	}
-	itemColumn.style.color = rarityColor;
-
-	const rarityColumn = document.createElement("td");
-	rarityColumn.innerText = item.rarity.toUpperCase();
-	rarityColumn.style.color = rarityColor;
-
-	const mintColumn = document.createElement("td");
-	mintColumn.innerText = item.mint.toFixed(6);
-	mintColumn.style.color = getMintColor(item.mint);
-
-	const row = document.createElement("tr");
-	row.append(typeColumn, itemColumn, rarityColumn, mintColumn);
-
-	if (highlightDupes && dupes.has(item.id)) {
-		row.style.backgroundColor = "#471c1c";
-	}
-
-	return row;
+	return createRow(
+		{ color: highlightDupes && dupes.has(item.id) ? "#471c1c" : undefined },
+		item.type.replaceAll("_", " ").toUpperCase(),
+		{ contents: item.name_tag !== undefined ? [item.display_name, createBreak(), createItalic(`"${item.name_tag}"`)] : item.display_name, color: rarityColor },
+		{ contents: item.rarity.toUpperCase(), color: rarityColor },
+		{ contents: item.mint.toFixed(6), color: getMintColor(item.mint) },
+	);
 }
 
 function getRarityIndex(rarity: Rarity): number {

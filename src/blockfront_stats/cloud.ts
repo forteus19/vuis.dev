@@ -1,4 +1,5 @@
 import { BFAPI_HOST, byId, getGameTypeName, type BfApiError, type GameType } from "../common";
+import { createAnchor, createRow } from "../dom_util";
 
 type CloudStats = {
 	players_online: number;
@@ -98,24 +99,13 @@ function getGameTypeIndex(gameType: GameType): number {
 
 function populateScoreboard(table: HTMLTableElement, entries: ScoreEntry[], hrefBase: string) {
 	for (const [i, entry] of entries.entries()) {
-		const placeColumn = document.createElement("td");
-		placeColumn.innerText = (i + 1).toLocaleString();
-		placeColumn.style.width = "40px";
-
-		const nameLink = document.createElement("a");
-		nameLink.innerText = entry.name;
-		nameLink.href = `${hrefBase}?uuid=${entry.uuid}`;
-		const nameColumn = document.createElement("td");
-		nameColumn.appendChild(nameLink);
-		nameColumn.style.width = "160px";
-
-		const scoreColumn = document.createElement("td");
-		scoreColumn.innerText = entry.score.toLocaleString();
-		scoreColumn.style.width = "130px";
-
-		const row = document.createElement("tr");
-		row.append(placeColumn, nameColumn, scoreColumn);
-
-		table.appendChild(row);
+		table.appendChild(
+			createRow(
+				{},
+				{ contents: (i + 1).toLocaleString(), width: "40px" },
+				{ contents: createAnchor(entry.name, `${hrefBase}?uuid=${entry.uuid}`), width: "160px" },
+				{ contents: entry.score.toLocaleString(), width: "130px" },
+			),
+		);
 	}
 }

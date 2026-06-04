@@ -35,14 +35,11 @@
 			Achievements: <span id="stat-achievements"></span><span style="color: darkgray">/68</span><br />
 			<br />
 			EXP: <span id="stat-exp" style="color: cyan"></span>
-			<span style="color: darkgray"
-				>(total: <span id="stat-expcumulative" style="color: cyan"></span><span id="stat-exprank" style="color: yellow"></span>)</span
-			><br />
+			<span style="color: darkgray">(total: <span id="stat-expcumulative" style="color: cyan"></span><span id="stat-exprank" style="color: yellow"></span>)</span><br />
 			K/D: <span id="stat-kd" style="color: lime"></span><br />
 			Headshots: <span id="stat-headshots" style="color: lime"></span><br />
 			K/HS: <span id="stat-khs" style="color: red"></span><br />
-			Kills: <span id="stat-kills" style="color: lime"></span>
-			<span style="color: darkgray">(sb: <span id="stat-sb-score"></span><span id="stat-sb-rank" style="color: yellow"></span>)</span><br />
+			Kills: <span id="stat-kills" style="color: lime"></span> <span style="color: darkgray">(sb: <span id="stat-sb-score"></span><span id="stat-sb-rank" style="color: yellow"></span>)</span><br />
 			Kill Streak: <span id="stat-killstreak" style="color: lime"></span><br />
 			Fire Kills: <span id="stat-firekills" style="color: lime"></span><br />
 			Back-stabs: <span id="stat-backstabs" style="color: lime"></span><br />
@@ -63,54 +60,10 @@
 			Bot Kills: <span id="stat-botkills" style="color: dodgerblue"></span><br />
 			Infected Kills: <span id="stat-infectedkills" style="color: lime"></span><br />
 			Vehicle Kills:
-			<span id="stat-vehiclekills" style="color: darkgray"></span>
-
-			<table style="margin-top: 24px">
-				<tr>
-					<th>Class</th>
-					<th>EXP</th>
-				</tr>
-				<tr>
-					<td>Rifleman</td>
-					<td id="stat-cexp-rifleman">0</td>
-				</tr>
-				<tr>
-					<td>Lt. Rifle</td>
-					<td id="stat-cexp-ltrifle">0</td>
-				</tr>
-				<tr>
-					<td>Assault</td>
-					<td id="stat-cexp-assault">0</td>
-				</tr>
-				<tr>
-					<td>Support</td>
-					<td id="stat-cexp-support">0</td>
-				</tr>
-				<tr>
-					<td>Medic</td>
-					<td id="stat-cexp-medic">0</td>
-				</tr>
-				<tr>
-					<td>Sniper</td>
-					<td id="stat-cexp-sniper">0</td>
-				</tr>
-				<tr>
-					<td>Gunner</td>
-					<td id="stat-cexp-gunner">0</td>
-				</tr>
-				<tr>
-					<td>Anti-Tank</td>
-					<td id="stat-cexp-antitank">0</td>
-				</tr>
-				<tr>
-					<td>Specialist</td>
-					<td id="stat-cexp-specialist">0</td>
-				</tr>
-				<tr>
-					<td>Commander</td>
-					<td id="stat-cexp-commander">0</td>
-				</tr>
-			</table>
+			<span id="stat-vehiclekills" style="color: darkgray"></span><br />
+			<br />
+			<button id="stat-cexp-toggle">Show Class EXP</button>
+			<table id="stat-cexp" hidden></table>
 		</div>
 
 		<script type="module" src="/src/common.ts"></script>
