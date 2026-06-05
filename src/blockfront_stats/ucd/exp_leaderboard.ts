@@ -57,8 +57,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 		pageSelect.appendChild(pageOption);
 	}
 
-	byId<HTMLSelectElement>("sort-select").addEventListener("change", () => buildTable(true));
 	pageSelect.addEventListener("change", () => buildTable(false));
+	byId<HTMLSelectElement>("sort-select").addEventListener("change", () => buildTable(true));
 	byId<HTMLInputElement>("prestige-select").addEventListener("change", () => buildTable(false));
 
 	buildTable(true);

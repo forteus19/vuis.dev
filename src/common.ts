@@ -22,6 +22,7 @@ export type PlayerStub = {
 export type GameType = "boot" | "dom" | "conq" | "tdm" | "gg" | "ffa" | "inf" | "sg" | "ttt" | "def" | "mov" | "camp" | "lob";
 
 export const BFAPI_HOST = "https://blockfrontapi.vuis.dev";
+// export const BFAPI_HOST = "http://localhost:19190";
 export const PRESTIGE_EXP = 253_001;
 
 const LAST_SEARCH_KEY = "lastSearch";

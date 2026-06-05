@@ -21,9 +21,4 @@ export default defineConfig({
 		},
 	},
 	plugins: [ViteMinifyPlugin({})],
-	resolve: {
-		alias: {
-			"@assets": resolve(__dirname, "src/assets"),
-		},
-	},
 });

@@ -14,16 +14,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 	const statsElement = byId<HTMLDivElement>("stats-content");
 
 	const urlParams = new URLSearchParams(window.location.search);
-	if (!urlParams.has("uuid")) {
+	const clanUuid = urlParams.get("uuid");
+	if (!clanUuid) {
 		titleElement.innerHTML = "missing uuid!";
 		loadingElement.hidden = true;
 		return;
 	}
-	const clanUuid = urlParams.get("uuid");
 
 	titleElement.innerText = `Stats for brigade ${clanUuid}`;
 
-	const fetchParams = new URLSearchParams({ uuid: clanUuid as string });
+	const fetchParams = new URLSearchParams({ uuid: clanUuid });
 
 	let stats: Clan;
 	try {

@@ -1,26 +1,31 @@
 import { BFAPI_HOST, byId, retrieveLastUsername, setLastSearch, type BfApiError, type PlayerStub } from "../common";
 import { createBreak, createItalic, createRow } from "../dom_util";
 
+type ItemRegistryEntry = [
+	name: string,
+	rarity: number,
+	itemType: number
+];
+
+import itemRegistryData from "../assets/registry_items.json";
+const itemRegistry = itemRegistryData as unknown as Partial<Record<string, ItemRegistryEntry>>;
+
 type PlayerInventory = {
-	inventory: Item[];
+	inventory: ItemStack[];
 	player: PlayerStub;
 };
 
-type Item = {
+type ItemStack = {
 	id: number;
-	name: string;
-	rarity: Rarity;
-	type: ItemType;
 	mint: number;
 	tag?: string;
 };
 
-type Rarity = "default" | "coal" | "iron" | "lapis" | "gold" | "diamond" | "obsidian";
-type ItemType = "all" | "generic" | "booster" | "card" | "cape" | "coin" | "gun" | "hat" | "key" | "melee" | "armor" | "case" | "sticker" | "name_tag";
+const RARITIES = ["DEFAULT", "COAL", "IRON", "LAPIS", "GOLD", "DIAMOND", "OBSIDIAN"];
+const RARITY_COLORS = ["#878787", "#6890ad", "#1f93e7", "#8b7def", "#cc5fc1", "#e8485c", "#ffc438"];
+const ITEM_TYPES = ["ALL", "GENERIC", "BOOSTER", "CARD", "CAPE", "COIN", "GUN", "HAT", "KEY", "MELEE", "ARMOR", "CASE", "STICKER", "NAME TAG"];
 
-const RARITY_COLORS = ["#8c8e93", "#6890ad", "#1f93e7", "#8b7def", "#cc5fc1", "#e8485c", "#ffc438"];
-
-let inventory: Item[] | null = null;
+let inventory: ItemStack[] | null = null;
 const dupes: Set<number> = new Set();
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -33,16 +38,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 	const urlParams = new URLSearchParams(window.location.search);
 	const playerUuid = urlParams.get("uuid");
-	if (playerUuid === null) {
+	if (!playerUuid) {
 		titleElement.innerText = "missing uuid!";
 		loadingElement.hidden = true;
 		return;
 	}
 
 	const lastUsername = retrieveLastUsername(playerUuid);
-	titleElement.innerText = `Armory for player ${lastUsername !== null ? lastUsername : playerUuid}`;
+	titleElement.innerText = `Armory for player ${lastUsername ? lastUsername : playerUuid}`;
 
-	const fetchParams = new URLSearchParams({ uuid: playerUuid, include_details: "true" });
+	const fetchParams = new URLSearchParams({ uuid: playerUuid });
 
 	let stats: PlayerInventory;
 	try {
@@ -81,7 +86,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 	let skinCount = 0;
 	for (const item of inventory) {
-		if (item.type === "gun" || item.type === "melee") {
+		const reg = itemRegistry[item.id];
+		if (reg && reg[1] !== 0 && (reg[2] === 6 || reg[2] === 9)) {
 			skinCount++;
 		}
 	}
@@ -95,13 +101,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 	byId<HTMLSelectElement>("sort-select").addEventListener("change", () => buildTable(true));
 	byId<HTMLSelectElement>("filter-select").addEventListener("change", () => buildTable(false));
+	byId<HTMLInputElement>("default-select").addEventListener("change", () => buildTable(false));
 	byId<HTMLInputElement>("dupes-select").addEventListener("change", () => buildTable(false));
 
 	buildTable(true);
 });
 
 function findDupes() {
-	if (inventory === null) {
+	if (!inventory) {
 		return;
 	}
 
@@ -117,12 +124,12 @@ function findDupes() {
 }
 
 function buildTable(sort: boolean) {
-	if (inventory === null) {
+	if (!inventory) {
 		return;
 	}
 
 	if (sort) {
-		let itemComparator: (a: Item, b: Item) => number;
+		let itemComparator: (a: ItemStack, b: ItemStack) => number;
 		switch (byId<HTMLSelectElement>("sort-select").value) {
 			default:
 				itemComparator = getRarityComparator();
@@ -135,7 +142,9 @@ function buildTable(sort: boolean) {
 	}
 
 	const filterSelect = byId<HTMLSelectElement>("filter-select");
-	const filter = filterSelect.value === "all" ? null : filterSelect.value;
+	const filter = filterSelect.value !== "0" ? parseInt(filterSelect.value) : null;
+
+	const showDefaults = byId<HTMLInputElement>("default-select").checked;
 
 	const highlightDupes = byId<HTMLInputElement>("dupes-select").checked;
 
@@ -143,8 +152,13 @@ function buildTable(sort: boolean) {
 
 	armoryTable.replaceChildren(buildHeaderRow());
 	for (const item of inventory) {
-		if (filter === null || filter === item.type) {
-			armoryTable.appendChild(buildItemRow(item, highlightDupes));
+		const reg = itemRegistry[item.id];
+
+		if (reg && (!filter || filter === reg[2]) && (showDefaults || reg[1] !== 0)) {
+			const row = buildItemRow(item, highlightDupes);
+			if (row) {
+				armoryTable.appendChild(row);
+			}
 		}
 	}
 }
@@ -153,41 +167,27 @@ function buildHeaderRow(): HTMLTableRowElement {
 	return createRow({ header: true }, "Type", { contents: "Item", width: "320px" }, "Rarity", "Mint");
 }
 
-function buildItemRow(item: Item, highlightDupes: boolean): HTMLTableRowElement {
-	const rarityColor = RARITY_COLORS[getRarityIndex(item.rarity)];
+function buildItemRow(stack: ItemStack, highlightDupes: boolean): HTMLTableRowElement | null {
+	const reg = itemRegistry[stack.id];
+	if (!reg) {
+		return null;
+	}
+
+	const rarityColor = RARITY_COLORS[reg[1]];
 
 	return createRow(
-		{ color: highlightDupes && dupes.has(item.id) ? "#471c1c" : undefined },
-		item.type.replaceAll("_", " ").toUpperCase(),
-		{ contents: item.tag !== undefined ? [item.name, createBreak(), createItalic(`"${item.tag}"`)] : item.name, color: rarityColor },
-		{ contents: item.rarity.toUpperCase(), color: rarityColor },
-		{ contents: item.mint.toFixed(6), color: getMintColor(item.mint) },
+		{ color: highlightDupes && dupes.has(stack.id) ? "#471c1c" : undefined },
+		ITEM_TYPES[reg[2]],
+		{ contents: stack.tag ? [reg[0], createBreak(), createItalic(`"${stack.tag}"`)] : reg[0], color: rarityColor },
+		{ contents: RARITIES[reg[1]].toUpperCase(), color: rarityColor },
+		{ contents: stack.mint.toFixed(6), color: getMintColor(stack.mint) },
 	);
 }
 
-function getRarityIndex(rarity: Rarity): number {
-	switch (rarity) {
-		default:
-			return 0;
-		case "coal":
-			return 1;
-		case "iron":
-			return 2;
-		case "lapis":
-			return 3;
-		case "gold":
-			return 4;
-		case "diamond":
-			return 5;
-		case "obsidian":
-			return 6;
-	}
-}
-
-function getRarityComparator(): (a: Item, b: Item) => number {
+function getRarityComparator(): (a: ItemStack, b: ItemStack) => number {
 	return (a, b) => {
-		const indexA = getRarityIndex(a.rarity);
-		const indexB = getRarityIndex(b.rarity);
+		const indexA = itemRegistry[a.id]?.[1] ?? -1;
+		const indexB = itemRegistry[b.id]?.[1] ?? -1;
 
 		if (indexA !== indexB) {
 			return indexB - indexA;
@@ -201,7 +201,7 @@ function getRarityComparator(): (a: Item, b: Item) => number {
 	};
 }
 
-function getMintComparator(): (a: Item, b: Item) => number {
+function getMintComparator(): (a: ItemStack, b: ItemStack) => number {
 	return (a, b) => {
 		return a.mint - b.mint;
 	};
@@ -212,7 +212,7 @@ function lerp(a: number, b: number, t: number): number {
 }
 
 function getColorString(r: number, g: number, b: number): string {
-	return `rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)})`;
+	return `rgb(${Math.round(r)},${Math.round(g)},${Math.round(b)})`;
 }
 
 function getMintColor(mint: number): string {

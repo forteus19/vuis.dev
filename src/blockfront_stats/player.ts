@@ -1,7 +1,7 @@
 import { BFAPI_HOST, byId, intToHexColor, PRESTIGE_EXP, retrieveLastUsername, setLastSearch, type BfApiError } from "../common";
 import { createRow } from "../dom_util";
 
-const RANK_IMAGES = Object.entries(import.meta.glob("@assets/bf_ranks/*.png", { eager: true, query: "?url", import: "default" }))
+const RANK_IMAGES = Object.entries(import.meta.glob("../assets/bf_ranks/*.png", { eager: true, query: "?url", import: "default" }))
 	.sort(([a], [b]) => a.localeCompare(b, undefined, { numeric: true }))
 	.map(([, url]) => url) as string[];
 
@@ -84,14 +84,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 	const urlParams = new URLSearchParams(window.location.search);
 	const playerUuid = urlParams.get("uuid");
-	if (playerUuid === null) {
+	if (!playerUuid) {
 		titleElement.innerText = "missing uuid!";
 		loadingElement.hidden = true;
 		return;
 	}
 
 	const lastUsername = retrieveLastUsername(playerUuid);
-	titleElement.innerText = `Stats for player ${lastUsername !== null ? lastUsername : playerUuid}`;
+	titleElement.innerText = `Stats for player ${lastUsername ? lastUsername : playerUuid}`;
 
 	const fetchParams = new URLSearchParams({ uuid: playerUuid });
 
@@ -136,7 +136,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 	loadingElement.hidden = true;
 	statsElement.hidden = false;
 
-	if (stats.punishments.active.ban !== undefined) {
+	if (stats.punishments.active.ban) {
 		byId("banned-message").hidden = false;
 	}
 
@@ -150,9 +150,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 	byId("stat-progress-current").innerText = (stats.exp - RANK_THRESHOLDS[rankIndex]).toLocaleString();
 	byId("stat-progress-end").innerText = (rankIndex !== RANK_THRESHOLDS.length - 1 ? RANK_THRESHOLDS[rankIndex + 1] - RANK_THRESHOLDS[rankIndex] : 0).toLocaleString();
 
-	byId("stat-mood").innerText = stats.mood !== null ? `"${stats.mood}"` : "None";
+	byId("stat-mood").innerText = stats.mood ? `"${stats.mood}"` : "None";
 	const groupElement = byId("stat-group");
-	if (stats.group !== null) {
+	if (stats.group) {
 		groupElement.innerText = stats.group.tag;
 		groupElement.style.color = intToHexColor(stats.group.color);
 	} else {
@@ -170,7 +170,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 	byId("stat-exp").innerText = stats.exp.toLocaleString();
 	byId("stat-expcumulative").innerText = (stats.prestige * PRESTIGE_EXP + stats.exp).toLocaleString();
-	if (stats.ucd.exp_rank !== null) {
+	if (stats.ucd.exp_rank) {
 		byId("stat-exprank").innerText = ` #${stats.ucd.exp_rank}`;
 	}
 	byId("stat-kd").innerText = (stats.kills / stats.deaths).toFixed(2);
@@ -178,7 +178,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 	byId("stat-khs").innerText = (stats.head_shots / stats.kills).toFixed(2);
 	byId("stat-kills").innerText = stats.kills.toLocaleString();
 	const sbScoreElement = byId("stat-sb-score");
-	if (stats.sb !== null) {
+	if (stats.sb) {
 		sbScoreElement.innerText = stats.sb.score.toLocaleString();
 		sbScoreElement.style.color = "lime";
 		byId("stat-sb-rank").innerText = ` #${stats.sb.rank}`;
