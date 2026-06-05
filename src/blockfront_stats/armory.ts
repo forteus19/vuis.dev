@@ -8,11 +8,11 @@ type PlayerInventory = {
 
 type Item = {
 	id: number;
-	display_name: string;
+	name: string;
 	rarity: Rarity;
 	type: ItemType;
 	mint: number;
-	name_tag?: string;
+	tag?: string;
 };
 
 type Rarity = "default" | "coal" | "iron" | "lapis" | "gold" | "diamond" | "obsidian";
@@ -159,7 +159,7 @@ function buildItemRow(item: Item, highlightDupes: boolean): HTMLTableRowElement 
 	return createRow(
 		{ color: highlightDupes && dupes.has(item.id) ? "#471c1c" : undefined },
 		item.type.replaceAll("_", " ").toUpperCase(),
-		{ contents: item.name_tag !== undefined ? [item.display_name, createBreak(), createItalic(`"${item.name_tag}"`)] : item.display_name, color: rarityColor },
+		{ contents: item.tag !== undefined ? [item.name, createBreak(), createItalic(`"${item.tag}"`)] : item.name, color: rarityColor },
 		{ contents: item.rarity.toUpperCase(), color: rarityColor },
 		{ contents: item.mint.toFixed(6), color: getMintColor(item.mint) },
 	);
