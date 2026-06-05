@@ -29,14 +29,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 	const urlParams = new URLSearchParams(window.location.search);
 	const playerUuid = urlParams.get("uuid");
-	if (playerUuid === null) {
+	if (!playerUuid) {
 		titleElement.innerText = "missing uuid!";
 		loadingElement.hidden = true;
 		return;
 	}
 
 	const lastUsername = retrieveLastUsername(playerUuid);
-	titleElement.innerText = `Status for player ${lastUsername !== null ? lastUsername : playerUuid}`;
+	titleElement.innerText = `Status for player ${lastUsername ? lastUsername : playerUuid}`;
 
 	const fetchParams = new URLSearchParams({ uuid: playerUuid });
 
@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 	const match = stats.match;
 
-	if (stats.online && match !== null) {
+	if (stats.online && match) {
 		byId("match-content").hidden = false;
 
 		byId("stat-gamemode").innerText = getGameTypeName(match.game);
@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 function getStatusName(status: Status): string {
 	if (status.online) {
-		if (status.server !== null) {
+		if (status.server) {
 			return "In Match";
 		}
 		switch (status.party) {

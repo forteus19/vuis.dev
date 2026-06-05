@@ -65,7 +65,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 function buildTable(sort: boolean) {
-	if (data === null) {
+	if (!data) {
 		return;
 	}
 

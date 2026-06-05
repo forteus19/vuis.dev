@@ -1,11 +1,15 @@
 import { byId, setLastSearch } from "../common";
 
 const USERNAME_REGEX = /^[a-zA-Z0-9_]{3,16}$/;
-const USER_API_ENDPOINT = "https://api.ashcon.app/mojang/v2/user/";
+const USER_API_ENDPOINT = "https://playerdb.co/api/player/minecraft/";
 
 type UserResponse = {
-	uuid: string;
-	username: string;
+	data: {
+		player: {
+			username: string;
+			id: string;
+		}
+	}
 	// dont care about other fields
 };
 
@@ -24,13 +28,17 @@ document.addEventListener("DOMContentLoaded", () => {
 		fetchingText.hidden = false;
 		fetchProfile(name)
 			.then((profile) => {
+				const player = profile.data.player;
 				setLastSearch({
-					uuid: profile.uuid,
-					name: profile.username,
+					uuid: player.id,
+					name: player.username,
 				});
-				document.location.assign(`${hrefBase}?uuid=${profile.uuid}`);
+				document.location.assign(`${hrefBase}?uuid=${player.id}`);
 			})
-			.catch((reason) => (fetchingText.innerText = `${reason}`));
+			.catch((reason) => {
+				console.error(reason);
+				fetchingText.innerText = `${reason}`;
+			});
 	}
 
 	viewStatsButton.addEventListener("click", () => fetchAndVisit("player.html"));

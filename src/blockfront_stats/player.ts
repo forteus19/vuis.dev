@@ -126,7 +126,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 	statusLink.hidden = false;
 	inventoryLink.href = `armory.html?uuid=${stats.uuid}`;
 	inventoryLink.hidden = false;
-	if (stats.clan !== null) {
+	if (stats.clan) {
 		clanLink.href = `clan.html?uuid=${stats.clan}`;
 		clanLink.hidden = false;
 	}
