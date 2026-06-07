@@ -18,52 +18,78 @@
 
 		<p id="loading-text">Loading...</p>
 
+		<button id="show-button" hidden>Show anyways</button>
+
 		<div id="stats-content" hidden>
-			<div id="banned-message" style="margin-bottom: 12px; color: red" hidden>This player is currently banned.</div>
-			Rank: <span id="stat-prestige" style="color: lime"></span><span id="stat-rank" style="color: white"></span
-			><img src="" alt="[rank icon]" id="stat-rank-icon" style="vertical-align: middle; margin-bottom: 4px; margin-left: 6px" /><br />
-			Progress:
-			<span id="stat-progress-current" style="color: darkgray"></span> / <span id="stat-progress-end" style="color: darkgray"></span><br />
-			<br />
-			Mood: <span id="stat-mood" style="color: darkgray"></span><br />
-			Group: <span id="stat-group"></span><br />
-			<br />
-			Match Karma: <span id="stat-matchkarma" style="color: magenta"></span><br />
-			Time Played: <span id="stat-timeplayed" style="color: darkgray"></span><br />
-			Games: <span id="stat-games" style="color: darkgray"></span><br />
-			Trophies: <span id="stat-trophies" style="color: yellow"></span><br />
-			Achievements: <span id="stat-achievements"></span><span style="color: darkgray">/68</span><br />
-			<br />
-			EXP: <span id="stat-exp" style="color: cyan"></span>
-			<span style="color: darkgray">(total: <span id="stat-expcumulative" style="color: cyan"></span><span id="stat-exprank" style="color: yellow"></span>)</span><br />
-			K/D: <span id="stat-kd" style="color: lime"></span><br />
-			Headshots: <span id="stat-headshots" style="color: lime"></span><br />
-			K/HS: <span id="stat-khs" style="color: red"></span><br />
-			Kills: <span id="stat-kills" style="color: lime"></span> <span style="color: darkgray">(sb: <span id="stat-sb-score"></span><span id="stat-sb-rank" style="color: yellow"></span>)</span><br />
-			Kill Streak: <span id="stat-killstreak" style="color: lime"></span><br />
-			Fire Kills: <span id="stat-firekills" style="color: lime"></span><br />
-			Back-stabs: <span id="stat-backstabs" style="color: lime"></span><br />
-			Assists: <span id="stat-assists" style="color: yellow"></span><br />
-			No-scopes: <span id="stat-noscopes" style="color: lime"></span><br />
-			Deaths: <span id="stat-deaths" style="color: red"></span><br />
-			Death Streak: <span id="stat-deathstreak" style="color: red"></span><br />
-			First-bloods: <span id="stat-firstbloods" style="color: darkred"></span><br />
-			Prestige Level: <span id="stat-prestigelevel" style="color: yellow"></span><br />
-			Completed Bootcamp:
-			<span id="stat-completedbootcamp" style="color: lime"></span><br />
-			<br />
-			Infected Rounds Won:
-			<span id="stat-infectedroundswon" style="color: red"></span><br />
-			Infected Matches Won:
-			<span id="stat-infectedmatcheswon" style="color: red"></span><br />
-			<br />
-			Bot Kills: <span id="stat-botkills" style="color: dodgerblue"></span><br />
-			Infected Kills: <span id="stat-infectedkills" style="color: lime"></span><br />
-			Vehicle Kills:
-			<span id="stat-vehiclekills" style="color: darkgray"></span><br />
-			<br />
-			<button id="stat-cexp-toggle">Show Class EXP</button>
-			<table id="stat-cexp" hidden></table>
+			<p id="banned-message" hidden>
+				<span style="color: #FF5555">Banned Player</span><br />
+				<span style="color: #AAAAAA">This player is currently banned from the cloud.</span>
+			</p>
+
+			<p id="scoreboard-message" hidden>
+				<b style="color: #FFFF55">Scoreboard Featured!</b><br />
+				<span style="color: #FFFF55">Featured on the official scoreboard!</span>
+			</p>
+
+			<p>
+				Rank: <span id="stat-prestige" style="color: #92FF7A"></span><span id="stat-rank" style="color: white"></span
+				><img src="" alt="[rank icon]" id="stat-rank-icon" style="vertical-align: middle; margin: 0 0 4px 6px" /><br />
+				Progress: <span id="stat-progress-current" style="color: #AAAAAA"></span> / <span id="stat-progress-end" style="color: #AAAAAA"></span>
+			</p>
+
+			<p>
+				Mood: <span id="stat-mood" style="color: #AAAAAA"></span><br />
+				Group: <span id="stat-group"></span>
+			</p>
+
+			<p>
+				Match Karma: <span id="stat-matchkarma" style="color: #FF55FF"></span><br />
+				Time Played: <span id="stat-timeplayed" style="color: #AAAAAA"></span><br />
+				Games: <span id="stat-games" style="color: #AAAAAA"></span><br />
+				Trophies: <span id="stat-trophies" style="color: #FFFF55"></span><br />
+				Achievements: <span id="stat-achievements"></span><span style="color: #AAAAAA">/68</span>
+			</p>
+
+			<p>
+				EXP: <span id="stat-exp" style="color: #55FFFF"></span>
+				<span style="color: #AAAAAA">(total: <span id="stat-expcumulative" style="color: #55FFFF"></span><span id="stat-exprank" style="color: #FFFF55"></span>)</span><br />
+				K/D: <span id="stat-kd"></span><br />
+				Headshots: <span id="stat-headshots" style="color: #55FF55"></span><br />
+				K/HS: <span id="stat-khs"></span><br />
+				Kills: <span id="stat-kills" style="color: #55FF55"></span> <span style="color: #AAAAAA">(sb: <span id="stat-sb-score"></span><span id="stat-sb-rank" style="color: #FFFF55"></span>)</span><br />
+				Kill Streak: <span id="stat-killstreak" style="color: #55FF55"></span><br />
+				Fire Kills: <span id="stat-firekills" style="color: #55FF55"></span><br />
+				Back-stabs: <span id="stat-backstabs" style="color: #55FF55"></span><br />
+				Assists: <span id="stat-assists" style="color: #FFFF55"></span><br />
+				No-scopes: <span id="stat-noscopes" style="color: #55FF55"></span><br />
+				Deaths: <span id="stat-deaths" style="color: #FF5555"></span><br />
+				Death Streak: <span id="stat-deathstreak" style="color: #FF5555"></span><br />
+				First-bloods: <span id="stat-firstbloods" style="color: #AA0000"></span><br />
+				Prestige Level: <span id="stat-prestigelevel" style="color: #FFFF55"></span><br />
+				Completed Bootcamp: <span id="stat-completedbootcamp"></span>
+			</p>
+
+			<p>
+				Infected Rounds Won: <span id="stat-infectedroundswon" style="color: #FF5555"></span><br />
+				Infected Matches Won: <span id="stat-infectedmatcheswon" style="color: #FF5555"></span>
+			</p>
+
+			<p>
+				Bot Kills: <span id="stat-botkills" style="color: #5555FF"></span><br />
+				Infected Kills: <span id="stat-infectedkills" style="color: #55FF55"></span><br />
+				Vehicle Kills: <span id="stat-vehiclekills" style="color: #AAAAAA"></span>
+			</p>
+
+			<p>
+				<span style="color: #FF5555">Punishment Records</span><br />
+				Warnings: <span id="stat-warnings" style="color: #FF5555"></span><br />
+				Mutes: <span id="stat-mutes" style="color: #FF5555"></span><br />
+				Bans: <span id="stat-bans" style="color: #FF5555"></span>
+			</p>
+
+			<p>
+				<table id="stat-cexp"></table>
+			</p>
 		</div>
 
 		<script type="module" src="/src/common.ts"></script>

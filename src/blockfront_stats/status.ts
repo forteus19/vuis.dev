@@ -75,7 +75,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 	const onlineElement = byId("stat-online");
 	onlineElement.innerText = getStatusName(stats);
-	onlineElement.style.color = stats.online ? "lime" : "red";
+	onlineElement.style.color = stats.online ? "#55FF55" : "#FF5555";
 	byId("stat-party").innerText = stats.party.charAt(0).toUpperCase() + stats.party.slice(1);
 
 	const match = stats.match;
@@ -88,7 +88,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 		const playerCountElement = byId("stat-players");
 		playerCountElement.innerText = `${match.players.length}/${match.max_players}`;
 		if (match.max_players > 16) {
-			playerCountElement.style.color = "yellow";
+			playerCountElement.style.color = "#FFFF55";
 		}
 
 		const playerListElement = byId("stat-matchplayers");

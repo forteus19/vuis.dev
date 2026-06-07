@@ -71,16 +71,11 @@ const RANK_THRESHOLDS = [0, 1, 1_001, 3_001, 6_001, 10_001, 16_001, 23_501, 32_5
 
 const CLASS_NAMES = ["Rifleman", "Lt. Rifle", "Assault", "Support", "Medic", "Sniper", "Gunner", "Anti-Tank", "Specialist", "Commander"];
 
-let classExpToggled = false;
+let stats: PlayerStats | null = null;
 
 document.addEventListener("DOMContentLoaded", async () => {
-	const statusLink = byId<HTMLAnchorElement>("status-link");
-	const inventoryLink = byId<HTMLAnchorElement>("inventory-link");
-	const clanLink = byId<HTMLAnchorElement>("clan-link");
-
 	const titleElement = byId<HTMLHeadingElement>("title");
 	const loadingElement = byId<HTMLParagraphElement>("loading-text");
-	const statsElement = byId<HTMLDivElement>("stats-content");
 
 	const urlParams = new URLSearchParams(window.location.search);
 	const playerUuid = urlParams.get("uuid");
@@ -95,7 +90,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 	const fetchParams = new URLSearchParams({ uuid: playerUuid });
 
-	let stats: PlayerStats;
 	try {
 		const response = await fetch(`${BFAPI_HOST}/api/v1/player_data?${fetchParams}`);
 
@@ -113,9 +107,34 @@ document.addEventListener("DOMContentLoaded", async () => {
 	}
 
 	if (stats.username === "Unknown") {
-		loadingElement.innerText = "user not found";
+		loadingElement.innerText = "unknown user";
+
+		const showButton = byId<HTMLButtonElement>("show-button");
+		showButton.hidden = false;
+
+		showButton.addEventListener("click", () => {
+			showButton.hidden = true;
+			load();
+		});
+
 		return;
 	}
+
+	load();
+});
+
+function load() {
+	if (!stats) {
+		return;
+	}
+
+	const statusLink = byId<HTMLAnchorElement>("status-link");
+	const inventoryLink = byId<HTMLAnchorElement>("inventory-link");
+	const clanLink = byId<HTMLAnchorElement>("clan-link");
+
+	const titleElement = byId<HTMLHeadingElement>("title");
+	const loadingElement = byId<HTMLParagraphElement>("loading-text");
+	const statsElement = byId<HTMLDivElement>("stats-content");
 
 	setLastSearch({
 		uuid: stats.uuid,
@@ -140,6 +159,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 		byId("banned-message").hidden = false;
 	}
 
+	if (stats.sb) {
+		byId("scoreboard-message").hidden = false;
+	}
+
 	const rankIndex = getRankIndex(stats.exp);
 
 	if (stats.prestige !== 0) {
@@ -157,7 +180,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 		groupElement.style.color = intToHexColor(stats.group.color);
 	} else {
 		groupElement.innerText = "None";
-		groupElement.style.color = "darkgray";
+		groupElement.style.color = "#AAAAAA";
 	}
 
 	byId("stat-matchkarma").innerText = stats.match_karma.toLocaleString();
@@ -166,25 +189,31 @@ document.addEventListener("DOMContentLoaded", async () => {
 	byId("stat-trophies").innerText = stats.trophies.toLocaleString();
 	const achievementsElement = byId("stat-achievements");
 	achievementsElement.innerText = stats.achievements.toLocaleString();
-	achievementsElement.style.color = stats.achievements >= 68 ? "lime" : "yellow";
+	achievementsElement.style.color = stats.achievements >= 68 ? "#55FF55" : "#FFFF55";
 
 	byId("stat-exp").innerText = stats.exp.toLocaleString();
 	byId("stat-expcumulative").innerText = (stats.prestige * PRESTIGE_EXP + stats.exp).toLocaleString();
 	if (stats.ucd.exp_rank) {
 		byId("stat-exprank").innerText = ` #${stats.ucd.exp_rank}`;
 	}
-	byId("stat-kd").innerText = (stats.kills / stats.deaths).toFixed(2);
+	const kdElement = byId("stat-kd");
+	const kd = stats.kills / stats.deaths;
+	kdElement.innerText = kd ? kd.toFixed(2) : "n/a";
+	kdElement.style.color = kd ? (kd > 1 ? "#55FF55" : "#FF5555") : "#AAAAAA";
 	byId("stat-headshots").innerText = stats.head_shots.toLocaleString();
-	byId("stat-khs").innerText = (stats.head_shots / stats.kills).toFixed(2);
+	const khsElement = byId("stat-khs");
+	const khs = stats.head_shots / stats.kills;
+	khsElement.innerText = khs ? khs.toFixed(2) : "n/a";
+	khsElement.style.color = khs ? (khs > 1 ? "#55FF55" : "#FF5555") : "#AAAAAA";
 	byId("stat-kills").innerText = stats.kills.toLocaleString();
 	const sbScoreElement = byId("stat-sb-score");
 	if (stats.sb) {
 		sbScoreElement.innerText = stats.sb.score.toLocaleString();
-		sbScoreElement.style.color = "lime";
+		sbScoreElement.style.color = "#55FF55";
 		byId("stat-sb-rank").innerText = ` #${stats.sb.rank}`;
 	} else {
 		sbScoreElement.innerText = "n/a";
-		sbScoreElement.style.color = "darkgray";
+		sbScoreElement.style.color = "#AAAAAA";
 	}
 	byId("stat-killstreak").innerText = stats.highest_kill_streak.toLocaleString();
 	byId("stat-firekills").innerText = stats.fire_kills.toLocaleString();
@@ -195,7 +224,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 	byId("stat-deathstreak").innerText = stats.highest_death_streak.toLocaleString();
 	byId("stat-firstbloods").innerText = stats.first_bloods.toLocaleString();
 	byId("stat-prestigelevel").innerText = stats.prestige.toLocaleString();
-	byId("stat-completedbootcamp").innerText = stats.bootcamp ? "Yes" : "No";
+	const bootcampElement = byId("stat-completedbootcamp");
+	bootcampElement.innerText = stats.bootcamp ? "Yes" : "No";
+	bootcampElement.style.color = stats.bootcamp ? "#55FF55" : "#FF5555";
 
 	byId("stat-infectedroundswon").innerText = stats.infected_rounds_won.toLocaleString();
 	byId("stat-infectedmatcheswon").innerText = stats.infected_matches_won.toLocaleString();
@@ -204,16 +235,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 	byId("stat-infectedkills").innerText = stats.infected_kills.toLocaleString();
 	byId("stat-vehiclekills").innerText = stats.vehicle_kills.toLocaleString();
 
-	const classExpTable = byId<HTMLTableElement>("stat-cexp");
-	buildClassExpTable(classExpTable, stats.class_exp);
+	const pastPunishments = stats.punishments.past;
+	byId("stat-warnings").innerText = (pastPunishments.warning ?? 0).toLocaleString();
+	byId("stat-mutes").innerText = (pastPunishments.mute ?? 0).toLocaleString();
+	byId("stat-bans").innerText = (pastPunishments.ban ?? 0).toLocaleString();
 
-	byId<HTMLButtonElement>("stat-cexp-toggle").addEventListener("click", function () {
-		classExpToggled = !classExpToggled;
-
-		classExpTable.hidden = !classExpToggled;
-		this.innerText = `${classExpToggled ? "Hide" : "Show"} Class EXP`;
-	});
-});
+	buildClassExpTable(byId<HTMLTableElement>("stat-cexp"), stats.class_exp);
+}
 
 function getRankIndex(exp: number): number {
 	let index = -1;

@@ -94,7 +94,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 	const skinCountElement = byId("stat-skins");
 	skinCountElement.innerText = `${skinCount}/256`;
 	if (skinCount >= 256) {
-		skinCountElement.style.color = "red";
+		skinCountElement.style.color = "#FF5555";
 	}
 
 	findDupes();
