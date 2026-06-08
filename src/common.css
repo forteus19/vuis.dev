@@ -67,3 +67,27 @@ hr {
 	gap: 12px;
 	margin-top: 6px;
 }
+
+.stats-layout {
+	display: flex;
+	gap: 32px;
+	align-items: flex-start;
+}
+
+.stats-column {
+	flex: 1;
+	min-width: 0;
+}
+
+.render-column {
+	flex: 1;
+	min-width: 280px;
+}
+
+#player-render-container img {
+	width: 50%;
+	height: auto;
+	max-width: 500px;
+	display: block;
+	margin: 0 auto;
+}

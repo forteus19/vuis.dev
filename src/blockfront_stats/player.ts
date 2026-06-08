@@ -1,4 +1,4 @@
-import { BFAPI_HOST, byId, intToHexColor, PRESTIGE_EXP, retrieveLastUsername, setLastSearch, type BfApiError } from "../common";
+import { BFAPI_HOST,SKIN_RENDER_HOST, byId, intToHexColor, PRESTIGE_EXP, retrieveLastUsername, setLastSearch, type BfApiError } from "../common";
 import { createRow } from "../dom_util";
 
 const RANK_IMAGES = Object.entries(import.meta.glob("../assets/bf_ranks/*.png", { eager: true, query: "?url", import: "default" }))
@@ -84,6 +84,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 	const urlParams = new URLSearchParams(window.location.search);
 	const playerUuid = urlParams.get("uuid");
+	const playerContainer = byId<HTMLDivElement>("player-render-container");
 	if (!playerUuid) {
 		titleElement.innerText = "missing uuid!";
 		loadingElement.hidden = true;
@@ -115,6 +116,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 	if (stats.username === "Unknown") {
 		loadingElement.innerText = "user not found";
 		return;
+	}
+	if (playerContainer) {
+		await fetchAndDisplayRender(stats.username);
 	}
 
 	setLastSearch({
@@ -240,4 +244,31 @@ function buildClassExpTable(table: HTMLTableElement, entries: ClassExpEntry[]) {
 
 		table.appendChild(createRow({}, CLASS_NAMES[entry.id], entry.exp.toLocaleString()));
 	}
+}
+async function fetchAndDisplayRender(username: string) {
+    const container = document.getElementById("player-render-container");
+    if (!container) return;
+    
+    try {
+        const imageUrl = `${SKIN_RENDER_HOST}/${encodeURIComponent(username)}`;
+        
+        const img = document.createElement("img");
+        img.src = imageUrl;
+        img.alt = `3D render of ${username}`;
+        img.style.maxWidth = "100%";
+        img.style.height = "auto";
+        
+        img.onload = () => {
+            container.replaceChildren(img);
+        };
+        
+        // Handle load error
+        img.onerror = () => {
+            container.innerHTML = '<p class="render-error"> Failed to load 3D render</p>';
+        };
+        
+    } catch (err) {
+        console.error("Failed to fetch render:", err);
+        container.innerHTML = '<p class="render-error"> Render unavailable</p>';
+    }
 }
