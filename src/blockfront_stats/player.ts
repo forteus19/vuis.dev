@@ -165,82 +165,81 @@ function load() {
 
 	const rankIndex = getRankIndex(stats.exp);
 
-	if (stats.prestige !== 0) {
-		byId("stat-prestige").innerText = `P${stats["prestige"]} `;
+	if (stats.prestige) {
+		setStat("prestige", `P${stats.prestige} `);
 	}
 	byId<HTMLImageElement>("stat-rank-icon").src = RANK_IMAGES[rankIndex];
-	byId("stat-rank").innerText = stats.rank;
-	byId("stat-progress-current").innerText = (stats.exp - RANK_THRESHOLDS[rankIndex]).toLocaleString();
-	byId("stat-progress-end").innerText = (rankIndex !== RANK_THRESHOLDS.length - 1 ? RANK_THRESHOLDS[rankIndex + 1] - RANK_THRESHOLDS[rankIndex] : 0).toLocaleString();
+	setStat("rank", stats.rank);
+	setStat("progress-current", stats.exp - RANK_THRESHOLDS[rankIndex]);
+	setStat("progress-end", rankIndex !== RANK_THRESHOLDS.length - 1 ? RANK_THRESHOLDS[rankIndex + 1] - RANK_THRESHOLDS[rankIndex] : 0);
 
-	byId("stat-mood").innerText = stats.mood ? `"${stats.mood}"` : "None";
-	const groupElement = byId("stat-group");
-	if (stats.group) {
-		groupElement.innerText = stats.group.tag;
-		groupElement.style.color = intToHexColor(stats.group.color);
-	} else {
-		groupElement.innerText = "None";
-		groupElement.style.color = "#AAAAAA";
-	}
+	setStat("mood", stats.mood ? `"${stats.mood}"` : "None");
+	setStat("group", stats.group ? stats.group.tag : "None", stats.group ? intToHexColor(stats.group.color) : "#AAAAAA");
 
-	byId("stat-matchkarma").innerText = stats.match_karma.toLocaleString();
-	byId("stat-timeplayed").innerText = `${(stats.time_played / 3600).toFixed(1)}h`;
-	byId("stat-games").innerText = stats.total_games.toLocaleString();
-	byId("stat-trophies").innerText = stats.trophies.toLocaleString();
-	const achievementsElement = byId("stat-achievements");
-	achievementsElement.innerText = stats.achievements.toLocaleString();
-	achievementsElement.style.color = stats.achievements >= 68 ? "#55FF55" : "#FFFF55";
+	setStat("matchkarma", stats.match_karma);
+	setStat("timeplayed", `${(stats.time_played / 3600).toFixed(1)}h`);
+	setStat("games", stats.total_games);
+	setStat("trophies", stats.trophies);
+	setStat("achievements", stats.achievements, stats.achievements >= 68 ? "#55FF55" : "#FFFF55");
 
-	byId("stat-exp").innerText = stats.exp.toLocaleString();
-	byId("stat-expcumulative").innerText = (stats.prestige * PRESTIGE_EXP + stats.exp).toLocaleString();
+	setStat("exp", stats.exp);
+	setStat("expcumulative", stats.prestige * PRESTIGE_EXP + stats.exp);
 	if (stats.ucd.exp_rank) {
-		byId("stat-exprank").innerText = ` #${stats.ucd.exp_rank}`;
+		setStat("exprank", ` #${stats.ucd.exp_rank}`);
 	}
-	const kdElement = byId("stat-kd");
-	const kd = stats.kills / stats.deaths;
-	kdElement.innerText = kd ? kd.toFixed(2) : "n/a";
-	kdElement.style.color = kd ? (kd > 1 ? "#55FF55" : "#FF5555") : "#AAAAAA";
-	byId("stat-headshots").innerText = stats.head_shots.toLocaleString();
-	const khsElement = byId("stat-khs");
-	const khs = stats.head_shots / stats.kills;
-	khsElement.innerText = khs ? khs.toFixed(2) : "n/a";
-	khsElement.style.color = khs ? (khs > 1 ? "#55FF55" : "#FF5555") : "#AAAAAA";
-	byId("stat-kills").innerText = stats.kills.toLocaleString();
-	const sbScoreElement = byId("stat-sb-score");
+	setRatio("kd", stats.kills, stats.deaths);
+	setStat("headshots", stats.head_shots);
+	setRatio("khs", stats.head_shots, stats.kills);
+	setStat("kills", stats.kills);
 	if (stats.sb) {
-		sbScoreElement.innerText = stats.sb.score.toLocaleString();
-		sbScoreElement.style.color = "#55FF55";
-		byId("stat-sb-rank").innerText = ` #${stats.sb.rank}`;
+		setStat("sb-score", stats.sb.score, "#55FF55");
+		setStat("sb-rank", ` #${stats.sb.rank}`);
 	} else {
-		sbScoreElement.innerText = "n/a";
-		sbScoreElement.style.color = "#AAAAAA";
+		setStat("sb-score", "n/a", "#AAAAAA");
 	}
-	byId("stat-killstreak").innerText = stats.highest_kill_streak.toLocaleString();
-	byId("stat-firekills").innerText = stats.fire_kills.toLocaleString();
-	byId("stat-backstabs").innerText = stats.back_stabs.toLocaleString();
-	byId("stat-assists").innerText = stats.assists.toLocaleString();
-	byId("stat-noscopes").innerText = stats.no_scopes.toLocaleString();
-	byId("stat-deaths").innerText = stats.deaths.toLocaleString();
-	byId("stat-deathstreak").innerText = stats.highest_death_streak.toLocaleString();
-	byId("stat-firstbloods").innerText = stats.first_bloods.toLocaleString();
-	byId("stat-prestigelevel").innerText = stats.prestige.toLocaleString();
-	const bootcampElement = byId("stat-completedbootcamp");
-	bootcampElement.innerText = stats.bootcamp ? "Yes" : "No";
-	bootcampElement.style.color = stats.bootcamp ? "#55FF55" : "#FF5555";
+	setStat("killstreak", stats.highest_kill_streak);
+	setStat("firekills", stats.fire_kills);
+	setStat("backstabs", stats.back_stabs);
+	setStat("assists", stats.assists);
+	setStat("noscopes", stats.no_scopes);
+	setStat("deaths", stats.deaths);
+	setStat("deathstreak", stats.highest_death_streak);
+	setStat("firstbloods", stats.first_bloods);
+	setStat("prestigelevel", stats.prestige);
+	setStat("completedbootcamp", stats.bootcamp ? "Yes" : "No", stats.bootcamp ? "#55FF55" : "#FF5555");
 
-	byId("stat-infectedroundswon").innerText = stats.infected_rounds_won.toLocaleString();
-	byId("stat-infectedmatcheswon").innerText = stats.infected_matches_won.toLocaleString();
+	setStat("infectedroundswon", stats.infected_rounds_won);
+	setStat("infectedmatcheswon", stats.infected_matches_won);
 
-	byId("stat-botkills").innerText = stats.bot_kills.toLocaleString();
-	byId("stat-infectedkills").innerText = stats.infected_kills.toLocaleString();
-	byId("stat-vehiclekills").innerText = stats.vehicle_kills.toLocaleString();
+	setStat("botkills", stats.bot_kills);
+	setStat("infectedkills", stats.infected_kills);
+	setStat("vehiclekills", stats.vehicle_kills);
 
 	const pastPunishments = stats.punishments.past;
-	byId("stat-warnings").innerText = (pastPunishments.warning ?? 0).toLocaleString();
-	byId("stat-mutes").innerText = (pastPunishments.mute ?? 0).toLocaleString();
-	byId("stat-bans").innerText = (pastPunishments.ban ?? 0).toLocaleString();
+	const activePunishments = stats.punishments.active;
+	for (const field of ["warning", "mute", "ban"] as const) {
+		setStat(field, pastPunishments[field] ?? 0);
+		const active = activePunishments[field];
+		if (active) {
+			byId(`stat-${field}-active`).hidden = false;
+			setStat(field + "-count", active);
+		}
+	}
 
 	buildClassExpTable(byId<HTMLTableElement>("stat-cexp"), stats.class_exp);
+}
+
+function setStat(statName: string, stat: string | number, color?: string) {
+	const element = byId(`stat-${statName}`);
+	element.innerText = typeof stat === "number" ? stat.toLocaleString() : stat;
+	if (color) {
+		element.style.color = color;
+	}
+}
+
+function setRatio(statName: string, num: number, den: number) {
+	const ratio = num / den;
+	setStat(statName, ratio ? ratio.toFixed(2) : "n/a", ratio ? (ratio > 1 ? "#55FF55" : "#FF5555") : "#AAAAAA");
 }
 
 function getRankIndex(exp: number): number {

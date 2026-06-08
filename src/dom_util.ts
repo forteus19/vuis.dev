@@ -5,7 +5,7 @@ export function createBreak(): HTMLBRElement {
 function createGenericText(tagName: string, text: string, color?: string): HTMLElement {
 	const element = document.createElement(tagName);
 	element.innerText = text;
-	if (color !== undefined) {
+	if (color) {
 		element.style.color = color;
 	}
 
@@ -55,14 +55,14 @@ export function createRow(options: { header?: boolean; color?: string }, ...colu
 	const row = document.createElement("tr");
 
 	for (const column of columns) {
-		const element = document.createElement(options.header !== undefined && options.header ? "th" : "td");
+		const element = document.createElement(options.header && options.header ? "th" : "td");
 
 		if (typeof column === "object" && "contents" in column) {
 			handleContents(element, column.contents);
-			if (column.color !== undefined) {
+			if (column.color) {
 				element.style.color = column.color;
 			}
-			if (column.width !== undefined) {
+			if (column.width) {
 				element.style.width = column.width;
 			}
 		} else {
@@ -72,7 +72,7 @@ export function createRow(options: { header?: boolean; color?: string }, ...colu
 		row.appendChild(element);
 	}
 
-	if (options.color !== undefined) {
+	if (options.color) {
 		row.style.backgroundColor = options.color;
 	}
 
