@@ -12,6 +12,10 @@ function createGenericText(tagName: string, text: string, color?: string): HTMLE
 	return element;
 }
 
+export function createSpan(text: string, color?: string): HTMLSpanElement {
+	return createGenericText("span", text, color) as HTMLSpanElement;
+}
+
 export function createBold(text: string, color?: string): HTMLElement {
 	return createGenericText("b", text, color);
 }
@@ -30,6 +34,13 @@ export function createAnchor(text: string, href: string, color?: string): HTMLAn
 export function createListItem(contents: Node): HTMLLIElement {
 	const element = document.createElement("li");
 	element.appendChild(contents);
+
+	return element;
+}
+
+export function createImage(src: string): HTMLImageElement {
+	const element = document.createElement("img");
+	element.src = src;
 
 	return element;
 }

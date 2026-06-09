@@ -1,4 +1,4 @@
-import { BFAPI_HOST, byId, retrieveLastUsername, setLastSearch, type BfApiError, type PlayerStub } from "../common";
+import { BFAPI_HOST, byId, createAvatarElement, retrieveLastUsername, setLastSearch, type BfApiError, type PlayerStub } from "../common";
 import { createBreak, createItalic, createRow } from "../dom_util";
 
 type ItemRegistryEntry = [
@@ -66,13 +66,19 @@ document.addEventListener("DOMContentLoaded", async () => {
 		return;
 	}
 
-	if (stats.player.name !== "Unknown") {
+	const uuid = stats.player.uuid;
+	const name = stats.player.name;
+
+	if (name !== "Unknown") {
 		setLastSearch({
-			uuid: stats.player.uuid,
-			name: stats.player.name,
+			uuid: uuid,
+			name: name,
 		});
-		titleElement.innerText = `Armory for player ${stats.player.name}`;
+
+		titleElement.innerText = `Armory for player ${name}`;
 	}
+
+	titleElement.appendChild(createAvatarElement(uuid));
 
 	playerLink.href = `player.html?uuid=${stats.player.uuid}`;
 	playerLink.hidden = false;

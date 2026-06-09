@@ -62,6 +62,13 @@ export function retrieveLastUsername(expectedUuid: string): string | null {
 	}
 }
 
+export function createAvatarElement(uuid: string): HTMLImageElement {
+	const element = document.createElement("img");
+	element.src = `https://mc-heads.net/avatar/${uuid}/24`;
+
+	return element;
+}
+
 export function getGameTypeName(gameType: GameType): string {
 	switch (gameType) {
 		case "boot":

@@ -1,5 +1,5 @@
-import { BFAPI_HOST, byId, intToHexColor, PRESTIGE_EXP, retrieveLastUsername, setLastSearch, type BfApiError } from "../common";
-import { createRow } from "../dom_util";
+import { BFAPI_HOST, byId, createAvatarElement, intToHexColor, PRESTIGE_EXP, retrieveLastUsername, setLastSearch, type BfApiError } from "../common";
+import { createImage, createRow, createSpan } from "../dom_util";
 
 const RANK_IMAGES = Object.entries(import.meta.glob("../assets/bf_ranks/*.png", { eager: true, query: "?url", import: "default" }))
 	.sort(([a], [b]) => a.localeCompare(b, undefined, { numeric: true }))
@@ -47,7 +47,7 @@ type PlayerStats = {
 	};
 	linked_discord: boolean;
 	linked_patreon: boolean;
-	sb: {
+	sb?: {
 		rank: number;
 		score: number;
 	} | null;
@@ -151,6 +151,7 @@ function load() {
 	}
 
 	titleElement.innerText = `Stats for player ${stats.username}`;
+	titleElement.appendChild(createAvatarElement(stats.uuid));
 
 	loadingElement.hidden = true;
 	statsElement.hidden = false;
@@ -165,11 +166,11 @@ function load() {
 
 	const rankIndex = getRankIndex(stats.exp);
 
+	const rankElement = byId("stat-rank");
 	if (stats.prestige) {
-		setStat("prestige", `P${stats.prestige} `);
+		rankElement.appendChild(createSpan(`P${stats.prestige}`, "#92FF7A"));
 	}
-	byId<HTMLImageElement>("stat-rank-icon").src = RANK_IMAGES[rankIndex];
-	setStat("rank", stats.rank);
+	rankElement.append(createSpan(stats.rank, "white"), createImage(RANK_IMAGES[rankIndex]));
 	setStat("progress-current", stats.exp - RANK_THRESHOLDS[rankIndex]);
 	setStat("progress-end", rankIndex !== RANK_THRESHOLDS.length - 1 ? RANK_THRESHOLDS[rankIndex + 1] - RANK_THRESHOLDS[rankIndex] : 0);
 
