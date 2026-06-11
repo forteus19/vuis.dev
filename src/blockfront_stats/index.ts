@@ -19,6 +19,8 @@ document.addEventListener("DOMContentLoaded", () => {
 	const viewArmoryButton = byId<HTMLButtonElement>("view-armory-button");
 	const fetchingText = byId<HTMLParagraphElement>("fetching-text");
 
+	fetchingText.hidden = true;
+
 	function fetchAndVisit(hrefBase: string) {
 		const name = searchInput.value;
 		if (testName(name)) {

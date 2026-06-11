@@ -1,4 +1,4 @@
-import { BFAPI_HOST, byId, createAvatarElement, formatPlayerStub, getGameTypeName, retrieveLastUsername, setLastSearch, type BfApiError, type GameType, type PlayerStub } from "../common";
+import { BFAPI_HOST, byId, createAvatarElement, formatStub, getGameTypeName, retrieveLastUsername, setLastSearch, type BfApiError, type GameType, type NamedStub } from "../common";
 import { createAnchor, createListItem } from "../dom_util";
 
 type Status = {
@@ -14,9 +14,9 @@ type Status = {
 		settings: {
 			team_size_limit: boolean;
 		};
-		players: PlayerStub[];
+		players: NamedStub[];
 	} | null;
-	player: PlayerStub;
+	player: NamedStub;
 };
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 	const uuid = stats.player.uuid;
 	const name = stats.player.name;
 
-	if (name !== "Unknown") {
+	if (name) {
 		setLastSearch({
 			uuid: uuid,
 			name: name,
@@ -99,7 +99,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 		const playerListElement = byId("stat-matchplayers");
 		for (const player of match.players) {
-			playerListElement.appendChild(createListItem(createAnchor(formatPlayerStub(player), `player.html?uuid=${player.uuid}`)));
+			playerListElement.appendChild(createListItem(createAnchor(formatStub(player), `player.html?uuid=${player.uuid}`)));
 		}
 	}
 });

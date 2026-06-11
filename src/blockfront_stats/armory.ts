@@ -1,4 +1,4 @@
-import { BFAPI_HOST, byId, createAvatarElement, retrieveLastUsername, setLastSearch, type BfApiError, type PlayerStub } from "../common";
+import { BFAPI_HOST, byId, createAvatarElement, retrieveLastUsername, setLastSearch, type BfApiError, type NamedStub } from "../common";
 import { createBreak, createItalic, createRow } from "../dom_util";
 
 type ItemRegistryEntry = [
@@ -12,7 +12,7 @@ const itemRegistry = itemRegistryData as unknown as Partial<Record<string, ItemR
 
 type PlayerInventory = {
 	inventory: ItemStack[];
-	player: PlayerStub;
+	player: NamedStub;
 };
 
 type ItemStack = {
@@ -69,7 +69,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 	const uuid = stats.player.uuid;
 	const name = stats.player.name;
 
-	if (name !== "Unknown") {
+	if (name) {
 		setLastSearch({
 			uuid: uuid,
 			name: name,

@@ -1,4 +1,4 @@
-import { BFAPI_HOST, byId, getGameTypeName, type BfApiError, type GameType } from "../common";
+import { BFAPI_HOST, byId, getGameTypeName, type BfApiError, type GameType, type NamedStub } from "../common";
 import { createAnchor, createRow } from "../dom_util";
 
 type CloudStats = {
@@ -9,9 +9,7 @@ type CloudStats = {
 	clan_scores: ScoreEntry[];
 };
 
-type ScoreEntry = {
-	uuid: string;
-	name: string;
+type ScoreEntry = NamedStub & {
 	score: number;
 };
 
@@ -46,22 +44,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 	const gameTypeTable = byId<HTMLTableElement>("stat-gmonline");
 	for (const [gameType, count] of gamePlayerCountEntries) {
-		const nameColumn = document.createElement("td");
-		nameColumn.innerText = getGameTypeName(gameType);
-		nameColumn.style.width = "150px";
-
-		const countColumn = document.createElement("td");
-		countColumn.innerText = count.toLocaleString();
-		countColumn.style.width = "50px";
-
-		const row = document.createElement("tr");
-		row.append(nameColumn, countColumn);
-
-		gameTypeTable.appendChild(row);
+		gameTypeTable.appendChild(createRow({}, { contents: getGameTypeName(gameType), width: "150px" }, { contents: count.toLocaleString(), width: "50px" }));
 	}
 
-	populateScoreboard(byId<HTMLTableElement>("stat-scoreboard-players"), stats.player_scores, "player.html");
-	populateScoreboard(byId<HTMLTableElement>("stat-scoreboard-clans"), stats.clan_scores, "clan.html");
+	populateScoreboard(byId<HTMLTableElement>("stat-scoreboard-players"), stats.player_scores, "player.html", "player", "/api/v1/player_data/bulk?stub=true");
+	populateScoreboard(byId<HTMLTableElement>("stat-scoreboard-clans"), stats.clan_scores, "clan.html", "clan", "/api/v1/clan_data/bulk?stub=true");
 });
 
 function getGameTypeIndex(gameType: GameType): number {
@@ -97,15 +84,36 @@ function getGameTypeIndex(gameType: GameType): number {
 	}
 }
 
-function populateScoreboard(table: HTMLTableElement, entries: ScoreEntry[], hrefBase: string) {
+function populateScoreboard(table: HTMLTableElement, entries: ScoreEntry[], hrefBase: string, idBase: string, bulkEndpoint: string) {
+	const unknownUuids: string[] = [];
+
 	for (const [i, entry] of entries.entries()) {
 		table.appendChild(
 			createRow(
 				{},
 				{ contents: (i + 1).toLocaleString(), width: "40px" },
-				{ contents: createAnchor(entry.name, `${hrefBase}?uuid=${entry.uuid}`), width: "160px" },
+				{ contents: createAnchor(entry.name ?? "#", `${hrefBase}?uuid=${entry.uuid}`, `sbrow-${idBase}-${entry.uuid}`), width: "160px" },
 				{ contents: entry.score.toLocaleString(), width: "130px" },
 			),
 		);
+
+		if (!entry.name) {
+			unknownUuids.push(entry.uuid);
+		}
 	}
+
+	if (!unknownUuids.length) {
+		return;
+	}
+
+	fetch(BFAPI_HOST + bulkEndpoint, {
+		method: "POST",
+		body: unknownUuids.join(","),
+	})
+		.then((response) => response.json())
+		.then((json: NamedStub[]) => {
+			for (const stub of json) {
+				byId(`sbrow-${idBase}-${stub.uuid}`).innerText = stub.name ?? "~error~";
+			}
+		});
 }

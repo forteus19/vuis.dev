@@ -14,7 +14,12 @@ export type BfApiError = {
 	error: string;
 };
 
-export type PlayerStub = {
+export type NamedStub = {
+	uuid: string;
+	name?: string;
+};
+
+export type LastSearch = {
 	uuid: string;
 	name: string;
 };
@@ -27,15 +32,11 @@ export const PRESTIGE_EXP = 253_001;
 
 const LAST_SEARCH_KEY = "lastSearch";
 
-export function formatPlayerStub(stub: PlayerStub): string {
-	if (stub.name === "Unknown") {
-		return `Unknown (${stub.uuid})`;
-	} else {
-		return stub.name;
-	}
+export function formatStub(stub: NamedStub): string {
+	return stub.name ?? stub.uuid;
 }
 
-export function getLastSearch(): PlayerStub | null {
+export function getLastSearch(): LastSearch | null {
 	const lastSearch = sessionStorage.getItem(LAST_SEARCH_KEY);
 	try {
 		return lastSearch !== null ? JSON.parse(lastSearch) : null;
@@ -44,7 +45,7 @@ export function getLastSearch(): PlayerStub | null {
 	}
 }
 
-export function setLastSearch(stub: PlayerStub) {
+export function setLastSearch(stub: LastSearch) {
 	sessionStorage.setItem(LAST_SEARCH_KEY, JSON.stringify(stub));
 }
 

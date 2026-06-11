@@ -24,9 +24,12 @@ export function createItalic(text: string, color?: string): HTMLElement {
 	return createGenericText("i", text, color);
 }
 
-export function createAnchor(text: string, href: string, color?: string): HTMLAnchorElement {
+export function createAnchor(text: string, href: string, id?: string, color?: string): HTMLAnchorElement {
 	const element = createGenericText("a", text, color) as HTMLAnchorElement;
 	element.href = href;
+	if (id) {
+		element.id = id;
+	}
 
 	return element;
 }
@@ -46,8 +49,9 @@ export function createImage(src: string): HTMLImageElement {
 }
 
 export type Contents = string | Node | (string | Node)[];
-export type StyledContents = {
+export type ContentsEx = {
 	contents: Contents;
+	id?: string;
 	color?: string;
 	width?: string;
 };
@@ -62,7 +66,7 @@ function handleContents(element: HTMLElement, contents: Contents) {
 	}
 }
 
-export function createRow(options: { header?: boolean; color?: string }, ...columns: (Contents | StyledContents)[]): HTMLTableRowElement {
+export function createRow(options: { header?: boolean; color?: string }, ...columns: (Contents | ContentsEx)[]): HTMLTableRowElement {
 	const row = document.createElement("tr");
 
 	for (const column of columns) {
@@ -70,6 +74,9 @@ export function createRow(options: { header?: boolean; color?: string }, ...colu
 
 		if (typeof column === "object" && "contents" in column) {
 			handleContents(element, column.contents);
+			if (column.id) {
+				element.id = column.id;
+			}
 			if (column.color) {
 				element.style.color = column.color;
 			}

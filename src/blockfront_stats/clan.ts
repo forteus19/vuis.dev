@@ -1,11 +1,11 @@
-import { BFAPI_HOST, byId, formatPlayerStub, type BfApiError, type PlayerStub } from "../common";
+import { BFAPI_HOST, byId, formatStub, type BfApiError, type NamedStub } from "../common";
 import { createAnchor, createListItem } from "../dom_util";
 
 type Clan = {
 	uuid: string;
 	name: string;
-	owner: PlayerStub;
-	members: PlayerStub[];
+	owner: NamedStub;
+	members: NamedStub[];
 };
 
 document.addEventListener("DOMContentLoaded", async () => {
@@ -48,11 +48,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 	statsElement.hidden = false;
 
 	const ownerElement = byId<HTMLAnchorElement>("stat-owner");
-	ownerElement.innerText = formatPlayerStub(stats.owner);
+	ownerElement.innerText = formatStub(stats.owner);
 	ownerElement.href = `player.html?uuid=${stats.owner.uuid}`;
 
 	const membersElement = byId("stat-members");
 	for (const member of stats.members) {
-		membersElement.appendChild(createListItem(createAnchor(formatPlayerStub(member), `player.html?uuid=${member.uuid}`)));
+		membersElement.appendChild(createListItem(createAnchor(formatStub(member), `player.html?uuid=${member.uuid}`)));
 	}
 });
