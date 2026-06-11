@@ -50,8 +50,9 @@ export function createImage(src: string): HTMLImageElement {
 
 export type Contents = string | Node | (string | Node)[];
 export type ContentsEx = {
-	contents: Contents;
+	contents: Contents | null;
 	id?: string;
+	className?: string;
 	color?: string;
 	width?: string;
 };
@@ -73,9 +74,14 @@ export function createRow(options: { header?: boolean; color?: string }, ...colu
 		const element = document.createElement(options.header && options.header ? "th" : "td");
 
 		if (typeof column === "object" && "contents" in column) {
-			handleContents(element, column.contents);
+			if (column.contents) {
+				handleContents(element, column.contents);
+			}
 			if (column.id) {
 				element.id = column.id;
+			}
+			if (column.className) {
+				element.className = column.className;
 			}
 			if (column.color) {
 				element.style.color = column.color;
