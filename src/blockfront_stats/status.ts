@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 	}
 
 	const lastUsername = retrieveLastUsername(playerUuid);
-	titleElement.innerText = `Status for player ${lastUsername ? lastUsername : playerUuid}`;
+	titleElement.innerText = `Status for player ${lastUsername ?? playerUuid}`;
 
 	const fetchParams = new URLSearchParams({ uuid: playerUuid });
 
@@ -107,7 +107,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 function getStatusName(status: Status): string {
 	if (status.online) {
 		if (status.server) {
-			return "In Match";
+			return status.match ? "In Match" : "Private Game";
 		}
 		switch (status.party) {
 			case "host":

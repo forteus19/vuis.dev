@@ -10,54 +10,59 @@
 		<div class="top-nav">
 			<a href="index.html">Home</a>
 			<a id="player-link" hidden>Player</a>
-			<a id="status-link" hidden>Status</a>
+			<a id="matches-link" hidden>Matches</a>
+			<!--<a id="status-link" hidden>Status</a>-->
 		</div>
 
 		<h2 id="title" class="flex-text"></h2>
 
 		<p id="loading-text">Loading...</p>
 
-		<div id="stats-content" style="display: grid; grid-template-columns: max-content 1fr; gap: 1rem">
-			<div style="border-right: 1px solid #555; padding-right: 1rem">
-				<table id="stat-armory"></table>
-			</div>
+		<div id="stats-content">
+			<p style="color: #FF5555">Due to recent cloud changes, only equipped and showcased items can be viewed.</p>
 
-			<div id="stat-controls" hidden>
-				<p>Skins: <span id="stat-skins"></span></p>
-				<p>
-					<label for="sort-select">Sort: </label>
-					<select id="sort-select">
-						<option value="rarity">RARITY</option>
-						<option value="mint">MINT</option>
-					</select>
-				</p>
-				<p>
-					<label for="filter-select">Filter: </label>
-					<select id="filter-select">
-						<option value="0">ALL</option>
-						<option value="1">GENERIC</option>
-						<option value="2">BOOSTER</option>
-						<option value="3">CARD</option>
-						<option value="4">CAPE</option>
-						<option value="5">COIN</option>
-						<option value="6">GUN</option>
-						<option value="7">HAT</option>
-						<option value="8">KEY</option>
-						<option value="9">MELEE</option>
-						<option value="10">ARMOR</option>
-						<option value="11">CASE</option>
-						<option value="12">STICKER</option>
-						<option value="13">NAME TAG</option>
-					</select>
-				</p>
-				<p>
-					<label for="default-select">Show defaults: </label>
-					<input type="checkbox" id="default-select" />
-				</p>
-				<p>
-					<label for="dupes-select">Highlight duplicates: </label>
-					<input type="checkbox" id="dupes-select" />
-				</p>
+			<div style="display: grid; grid-template-columns: max-content 1fr; gap: 1rem">
+				<div style="border-right: 1px solid #555; padding-right: 1rem">
+					<table id="stat-armory"></table>
+				</div>
+
+				<div id="stat-controls" hidden>
+					<!--<p>Skins: <span id="stat-skins"></span></p>-->
+					<p>
+						<label for="sort-select">Sort: </label>
+						<select id="sort-select">
+							<option value="rarity">RARITY</option>
+							<option value="mint">MINT</option>
+						</select>
+					</p>
+					<p>
+						<label for="filter-select">Filter: </label>
+						<select id="filter-select">
+							<option value="0">ALL</option>
+							<option value="1">GENERIC</option>
+							<option value="2">BOOSTER</option>
+							<option value="3">CARD</option>
+							<option value="4">CAPE</option>
+							<option value="5">COIN</option>
+							<option value="6">GUN</option>
+							<option value="7">HAT</option>
+							<option value="8">KEY</option>
+							<option value="9">MELEE</option>
+							<option value="10">ARMOR</option>
+							<option value="11">CASE</option>
+							<option value="12">STICKER</option>
+							<option value="13">NAME TAG</option>
+						</select>
+					</p>
+					<!--<p>
+						<label for="default-select">Show defaults: </label>
+						<input type="checkbox" id="default-select" />
+					</p>
+					<p>
+						<label for="dupes-select">Highlight duplicates: </label>
+						<input type="checkbox" id="dupes-select" />
+					</p>-->
+				</div>
 			</div>
 		</div>
 

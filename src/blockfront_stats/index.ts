@@ -15,19 +15,23 @@ type UserResponse = {
 
 document.addEventListener("DOMContentLoaded", () => {
 	const searchInput = byId<HTMLInputElement>("search-input");
-	const viewStatsButton = byId<HTMLButtonElement>("view-stats-button");
-	const viewArmoryButton = byId<HTMLButtonElement>("view-armory-button");
 	const fetchingText = byId<HTMLParagraphElement>("fetching-text");
 
 	fetchingText.hidden = true;
 
 	function fetchAndVisit(hrefBase: string) {
 		const name = searchInput.value;
-		if (testName(name)) {
+		if (name === "") {
+			return;
+		} else if (!USERNAME_REGEX.test(name)) {
+			fetchingText.innerText = "invalid username";
+			fetchingText.hidden = false;
 			return;
 		}
-		fetchingText.innerText = "Fetching profile...";
+
+		fetchingText.innerText = "fetching profile...";
 		fetchingText.hidden = false;
+
 		fetchProfile(name)
 			.then((profile) => {
 				const player = profile.data.player;
@@ -43,20 +47,10 @@ document.addEventListener("DOMContentLoaded", () => {
 			});
 	}
 
-	viewStatsButton.addEventListener("click", () => fetchAndVisit("player.html"));
-	viewArmoryButton.addEventListener("click", () => fetchAndVisit("armory.html"));
+	byId<HTMLButtonElement>("view-stats-button").addEventListener("click", () => fetchAndVisit("player.html"));
+	byId<HTMLButtonElement>("view-armory-button").addEventListener("click", () => fetchAndVisit("armory.html"));
+	byId<HTMLButtonElement>("view-matches-button").addEventListener("click", () => fetchAndVisit("matches.html"));
 });
-
-function testName(name: string): boolean {
-	if (name === "") {
-		return true;
-	} else if (!USERNAME_REGEX.test(name)) {
-		alert("Invalid username");
-		return true;
-	} else {
-		return false;
-	}
-}
 
 async function fetchProfile(name: string): Promise<UserResponse> {
 	return fetch(USER_API_ENDPOINT + name).then((res) => {

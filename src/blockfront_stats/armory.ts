@@ -1,5 +1,5 @@
 import { BFAPI_HOST, byId, createAvatarElement, retrieveLastUsername, setLastSearch, type BfApiError, type NamedStub } from "../common";
-import { createBreak, createItalic, createRow } from "../dom_util";
+import { createRow } from "../dom_util";
 
 type ItemDetails = [name: string, rarity: number, itemType: number, mcIdIndex?: number, skinId?: number, patternIndex?: number];
 type McDetails = [id: string, capacity: number, maxAmmo: number];
@@ -20,7 +20,9 @@ type PlayerInventory = {
 type ItemStack = {
 	id: number;
 	mint: number;
-	tag?: string;
+};
+
+type ItemStackEx = ItemStack & {
 	command?: string;
 };
 
@@ -29,12 +31,13 @@ const RARITY_COLORS = ["#878787", "#6890ad", "#1f93e7", "#8b7def", "#cc5fc1", "#
 const ITEM_TYPES = ["ALL", "GENERIC", "BOOSTER", "CARD", "CAPE", "COIN", "GUN", "HAT", "KEY", "MELEE", "ARMOR", "CASE", "STICKER", "NAME TAG"];
 
 let username: string;
-let inventory: ItemStack[];
+let inventory: ItemStackEx[];
 const dupes: Set<number> = new Set();
 
 document.addEventListener("DOMContentLoaded", async () => {
 	const playerLink = byId<HTMLAnchorElement>("player-link");
-	const statusLink = byId<HTMLAnchorElement>("status-link");
+	const matchesLink = byId<HTMLAnchorElement>("matches-link");
+	// const statusLink = byId<HTMLAnchorElement>("status-link");
 
 	const titleElement = byId<HTMLHeadingElement>("title");
 	const loadingElement = byId<HTMLParagraphElement>("loading-text");
@@ -49,7 +52,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 	}
 
 	const lastUsername = retrieveLastUsername(playerUuid);
-	titleElement.innerText = `Armory for player ${lastUsername ? lastUsername : playerUuid}`;
+	titleElement.innerText = `Armory for player ${lastUsername ?? playerUuid}`;
 
 	const fetchParams = new URLSearchParams({ uuid: playerUuid });
 
@@ -73,6 +76,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 	const uuid = stats.player.uuid;
 	const name = stats.player.name;
 
+	username = name ?? lastUsername ?? "Unknown";
+
 	if (name) {
 		setLastSearch({
 			uuid: uuid,
@@ -80,15 +85,16 @@ document.addEventListener("DOMContentLoaded", async () => {
 		});
 
 		titleElement.innerText = `Armory for player ${name}`;
-		username = name;
 	}
 
 	titleElement.appendChild(createAvatarElement(uuid));
 
 	playerLink.href = `player.html?uuid=${stats.player.uuid}`;
 	playerLink.hidden = false;
-	statusLink.href = `status.html?uuid=${stats.player.uuid}`;
-	statusLink.hidden = false;
+	matchesLink.href = `matches.html?uuid=${stats.player.uuid}`;
+	matchesLink.hidden = false;
+	// statusLink.href = `status.html?uuid=${stats.player.uuid}`;
+	// statusLink.hidden = false;
 
 	loadingElement.hidden = true;
 	controlsElement.hidden = false;
@@ -111,18 +117,18 @@ document.addEventListener("DOMContentLoaded", async () => {
 			stack.command = command;
 		}
 	}
-	const skinCountElement = byId("stat-skins");
-	skinCountElement.innerText = `${skinCount}/256`;
-	if (skinCount >= 256) {
-		skinCountElement.style.color = "#FF5555";
-	}
+	// const skinCountElement = byId("stat-skins");
+	// skinCountElement.innerText = `${skinCount}/256`;
+	// if (skinCount >= 256) {
+	// 	skinCountElement.style.color = "#FF5555";
+	// }
 
 	findDupes();
 
 	byId<HTMLSelectElement>("sort-select").addEventListener("change", () => buildTable(true));
 	byId<HTMLSelectElement>("filter-select").addEventListener("change", () => buildTable(false));
-	byId<HTMLInputElement>("default-select").addEventListener("change", () => buildTable(false));
-	byId<HTMLInputElement>("dupes-select").addEventListener("change", () => buildTable(false));
+	// byId<HTMLInputElement>("default-select").addEventListener("change", () => buildTable(false));
+	// byId<HTMLInputElement>("dupes-select").addEventListener("change", () => buildTable(false));
 
 	buildTable(true);
 });
@@ -164,18 +170,20 @@ function buildTable(sort: boolean) {
 	const filterSelect = byId<HTMLSelectElement>("filter-select");
 	const filter = filterSelect.value !== "0" ? parseInt(filterSelect.value) : null;
 
-	const showDefaults = byId<HTMLInputElement>("default-select").checked;
+	// const showDefaults = byId<HTMLInputElement>("default-select").checked;
+	const showDefaults = true;
 
-	const highlightDupes = byId<HTMLInputElement>("dupes-select").checked;
+	// const highlightDupes = byId<HTMLInputElement>("dupes-select").checked;
+	const highlightDupes = false;
 
 	const armoryTable = byId<HTMLTableElement>("stat-armory");
 
 	armoryTable.replaceChildren(buildHeaderRow());
-	for (const item of inventory) {
-		const details = itemRegistry.details[item.id];
+	for (const stack of inventory) {
+		const details = itemRegistry.details[stack.id];
 
 		if (details && (!filter || filter === details[2]) && (showDefaults || details[1] !== 0)) {
-			const row = buildItemRow(item, highlightDupes);
+			const row = buildItemRow(stack, highlightDupes);
 			if (row) {
 				armoryTable.appendChild(row);
 			}
@@ -191,15 +199,14 @@ function createGiveCommand(stack: ItemStack, details: ItemDetails): string | nul
 
 	const mcDetails = itemRegistry.mc[mcIdIndex];
 
-	const components: string[] = [`bf:has_tag=1`, `bf:ammo=${mcDetails[2]}`, `bf:max_ammo=${mcDetails[2]}`, `bf:ammo_loaded=${mcDetails[1]}`, `bf:mint=${stack.mint}`];
-
-	if (username) {
-		components.push(`bf:original_owner=${username}`);
-	}
-
-	if (stack.tag !== undefined) {
-		components.push(`bf:name_tag="${stack.tag}"`);
-	}
+	const components: string[] = [
+		`bf:has_tag=1`,
+		`bf:original_owner=${username}`,
+		`bf:ammo=${mcDetails[2]}`,
+		`bf:max_ammo=${mcDetails[2]}`,
+		`bf:ammo_loaded=${mcDetails[1]}`,
+		`bf:mint=${stack.mint}`
+	];
 
 	const skinId = details[4];
 	if (skinId) {
@@ -226,7 +233,7 @@ function buildHeaderRow(): HTMLTableRowElement {
 	);
 }
 
-function buildItemRow(stack: ItemStack, highlightDupes: boolean): HTMLTableRowElement | null {
+function buildItemRow(stack: ItemStackEx, highlightDupes: boolean): HTMLTableRowElement | null {
 	const details = itemRegistry.details[stack.id];
 	if (!details) {
 		return null;
@@ -238,13 +245,13 @@ function buildItemRow(stack: ItemStack, highlightDupes: boolean): HTMLTableRowEl
 		highlightDupes && dupes.has(stack.id) ? { color: "#471c1c" } : {},
 		{ contents: createCommandButton(stack), className: "command-cell", width: "20px" },
 		{ contents: ITEM_TYPES[details[2]], width: "85px" },
-		{ contents: stack.tag ? [details[0], createBreak(), createItalic(`"${stack.tag}"`)] : details[0], color: rarityColor, width: "320px" },
+		{ contents: details[0], color: rarityColor, width: "320px" },
 		{ contents: RARITIES[details[1]].toUpperCase(), color: rarityColor, width: "85px" },
 		{ contents: stack.mint.toFixed(6), color: getMintColor(stack.mint), width: "85px" },
 	);
 }
 
-function createCommandButton(stack: ItemStack): HTMLButtonElement | null {
+function createCommandButton(stack: ItemStackEx): HTMLButtonElement | null {
 	const command = stack.command;
 	if (!command) {
 		return null;

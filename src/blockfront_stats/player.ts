@@ -86,7 +86,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 	}
 
 	const lastUsername = retrieveLastUsername(playerUuid);
-	titleElement.innerText = `Stats for player ${lastUsername ? lastUsername : playerUuid}`;
+	titleElement.innerText = `Stats for player ${lastUsername ?? playerUuid}`;
 
 	const fetchParams = new URLSearchParams({ uuid: playerUuid });
 
@@ -128,8 +128,9 @@ function load() {
 		return;
 	}
 
-	const statusLink = byId<HTMLAnchorElement>("status-link");
+	// const statusLink = byId<HTMLAnchorElement>("status-link");
 	const inventoryLink = byId<HTMLAnchorElement>("inventory-link");
+	const matchesLink = byId<HTMLAnchorElement>("matches-link");
 	const clanLink = byId<HTMLAnchorElement>("clan-link");
 
 	const titleElement = byId<HTMLHeadingElement>("title");
@@ -141,10 +142,12 @@ function load() {
 		name: stats.username,
 	});
 
-	statusLink.href = `status.html?uuid=${stats.uuid}`;
-	statusLink.hidden = false;
+	// statusLink.href = `status.html?uuid=${stats.uuid}`;
+	// statusLink.hidden = false;
 	inventoryLink.href = `armory.html?uuid=${stats.uuid}`;
 	inventoryLink.hidden = false;
+	matchesLink.href = `matches.html?uuid=${stats.uuid}`;
+	matchesLink.hidden = false;
 	if (stats.clan) {
 		clanLink.href = `clan.html?uuid=${stats.clan}`;
 		clanLink.hidden = false;
@@ -164,6 +167,8 @@ function load() {
 		byId("scoreboard-message").hidden = false;
 	}
 
+	setStat("group", stats.group ? stats.group.tag : "None", stats.group ? intToHexColor(stats.group.color) : "#AAAAAA");
+
 	const rankIndex = getRankIndex(stats.exp);
 
 	const rankElement = byId("stat-rank");
@@ -173,9 +178,6 @@ function load() {
 	rankElement.append(createSpan(stats.rank, "white"), createImage(RANK_IMAGES[rankIndex]));
 	setStat("progress-current", stats.exp - RANK_THRESHOLDS[rankIndex]);
 	setStat("progress-end", rankIndex !== RANK_THRESHOLDS.length - 1 ? RANK_THRESHOLDS[rankIndex + 1] - RANK_THRESHOLDS[rankIndex] : 0);
-
-	setStat("mood", stats.mood ? `"${stats.mood}"` : "None");
-	setStat("group", stats.group ? stats.group.tag : "None", stats.group ? intToHexColor(stats.group.color) : "#AAAAAA");
 
 	setStat("matchkarma", stats.match_karma);
 	setStat("timeplayed", `${(stats.time_played / 3600).toFixed(1)}h`);

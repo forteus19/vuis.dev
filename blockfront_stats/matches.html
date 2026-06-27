@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+		<title>Player Matches</title>
+	</head>
+	<body>
+		<div class="top-nav">
+			<a href="index.html">Home</a>
+			<a id="player-link" hidden>Player</a>
+			<a id="inventory-link" hidden>Armory</a>
+		</div>
+
+		<h2 id="title" class="flex-text"></h2>
+
+		<p id="loading-text">Loading...</p>
+
+		<div id="stats-content" hidden>
+			<p>
+				<label for="sort-select">Sort: </label>
+				<select id="sort-select">
+					<option value="0">Time</option>
+					<option value="1">Kills</option>
+					<option value="2">Deaths</option>
+					<option value="3">Assists</option>
+					<option value="4">Score</option>
+				</select>
+			</p>
+			<p>
+				Filter:
+				<ul>
+					<li>
+						<label for="game-filter">Game: </label>
+						<select id="game-filter">
+							<option value="all">ALL</option>
+						</select>
+					</li>
+					<li>
+						<label for="map-filter">Map: </label>
+						<select id="map-filter">
+							<option value="all">ALL</option>
+						</select>
+					</li>
+					<li>
+						<label for="result-filter">Result: </label>
+						<select id="result-filter">
+							<option value="all">ALL</option>
+						</select>
+					</li>
+					<li>
+						<label for="team-filter">Team: </label>
+						<select id="team-filter">
+							<option value="all">ALL</option>
+						</select>
+					</li>
+				</ul>
+			</p>
+			<p>
+				<label for="time-select">Absolute times: </label>
+				<input type="checkbox" id="time-select" />
+			</p>
+
+			<table id="stat-matches"></table>
+
+			<p><i style="color: #a0a0a0">Entries are removed after 30 days.</i></p>
+		</div>
+
+		<script type="module" src="/src/common.ts"></script>
+		<script type="module" src="/src/blockfront_stats/matches.ts"></script>
+	</body>
+	<style>
+		th,
+		td {
+			padding: 0 5px;
+			width: 0;
+		}
+	</style>
+</html>

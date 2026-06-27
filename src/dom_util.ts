@@ -20,10 +20,6 @@ export function createBold(text: string, color?: string): HTMLElement {
 	return createGenericText("b", text, color);
 }
 
-export function createItalic(text: string, color?: string): HTMLElement {
-	return createGenericText("i", text, color);
-}
-
 export function createAnchor(text: string, href: string, id?: string, color?: string): HTMLAnchorElement {
 	const element = createGenericText("a", text, color) as HTMLAnchorElement;
 	element.href = href;
@@ -44,6 +40,14 @@ export function createListItem(contents: Node): HTMLLIElement {
 export function createImage(src: string): HTMLImageElement {
 	const element = document.createElement("img");
 	element.src = src;
+
+	return element;
+}
+
+export function createOption(value: string, text: string): HTMLOptionElement {
+	const element = document.createElement("option");
+	element.value = value;
+	element.innerText = text;
 
 	return element;
 }
