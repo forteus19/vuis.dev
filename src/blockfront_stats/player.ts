@@ -183,7 +183,7 @@ function load() {
 	setStat("timeplayed", `${(stats.time_played / 3600).toFixed(1)}h`);
 	setStat("games", stats.total_games);
 	setStat("trophies", stats.trophies);
-	setStat("achievements", stats.achievements, stats.achievements >= 68 ? "#55FF55" : "#FFFF55");
+	setStat("achievements", stats.achievements, stats.achievements >= 69 ? "#55FF55" : "#FFFF55");
 
 	setStat("exp", stats.exp);
 	setStat("expcumulative", stats.prestige * PRESTIGE_EXP + stats.exp);

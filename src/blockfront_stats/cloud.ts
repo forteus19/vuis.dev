@@ -57,7 +57,7 @@ function getGameTypeIndex(gameType: GameType): number {
 			return 0;
 		case "dom":
 			return 1;
-		case "conq":
+		case "of":
 			return 2;
 		case "tdm":
 			return 3;

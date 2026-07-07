@@ -24,7 +24,7 @@ export type LastSearch = {
 	name: string;
 };
 
-export type GameType = "boot" | "dom" | "conq" | "tdm" | "gg" | "ffa" | "inf" | "sg" | "ttt" | "def" | "mov" | "camp" | "lob";
+export type GameType = "boot" | "dom" | "tdm" | "gg" | "ffa" | "of" | "inf" | "sg" | "ttt" | "def" | "mov" | "camp" | "lob";
 
 export const BFAPI_HOST = "https://blockfrontapi.vuis.dev";
 // export const BFAPI_HOST = "http://localhost:19190";
@@ -76,14 +76,14 @@ export function getGameTypeName(gameType: GameType): string {
 			return "Bootcamp";
 		case "dom":
 			return "Domination";
-		case "conq":
-			return "Conquest";
 		case "tdm":
 			return "Team Deathmatch";
 		case "gg":
 			return "Gun Game";
 		case "ffa":
 			return "Free For All";
+		case "of":
+			return "Offensive";
 		case "inf":
 			return "Infected";
 		case "sg":

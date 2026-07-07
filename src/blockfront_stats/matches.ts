@@ -62,6 +62,10 @@ const COMPARATORS: ((a: MatchSummary, b: MatchSummary) => number)[] = [
 	},
 ];
 
+const SPECIAL_MAPS = new Set([
+	"Beached", "Caen", "Cliffside", "Danzig", "Frostbite", "Hacksaw", "Kasserine", "Mammut", "Polvere", "Range", "Saints", "Tenaru", "Trainyard"
+]);
+
 const TIME_UNITS: [string, number][] = [
 	["d", 1000 * 60 * 60 * 24],
 	["h", 1000 * 60 * 60],
@@ -230,14 +234,15 @@ function buildHeaderRow(absoluteTimes: boolean): HTMLTableRowElement {
 function buildEntryRow(summary: MatchSummary, absoluteTimes: boolean, nowMs: number): HTMLTableRowElement {
 	const endedAt = new Date(summary.ended_at);
 
+	const showTeam = summary.game !== "ffa";
 	const showStats = summary.game !== "inf";
 
 	return createRow(
 		{},
 		{ contents: summary.game.toUpperCase(), width: "50px" },
-		{ contents: summary.map, width: "150px" },
+		{ contents: summary.map, color: SPECIAL_MAPS.has(summary.map) ? "#dbb2ff" : undefined, width: "150px" },
 		{ contents: summary.result.toUpperCase(), color: getResultColor(summary.result), width: "70px" },
-		{ contents: summary.player_team, color: getTeamColor(summary.player_team), width: "70px" },
+		{ contents: showTeam ? summary.player_team : null, color: getTeamColor(summary.player_team), width: "70px" },
 		{ contents: absoluteTimes ? endedAt.toLocaleString() : formatDateRelative(nowMs, endedAt), width: absoluteTimes ? "240px" : "100px" },
 		{ contents: `#${summary.placement}`, width: "70px" },
 		{ contents: showStats ? summary.kills.toLocaleString() : null, color: "#5FB7F5", width: "70px" },
