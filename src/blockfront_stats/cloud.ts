@@ -1,4 +1,4 @@
-import { BFAPI_HOST, byId, getGameTypeName, type BfApiError, type GameType, type NamedStub } from "../common";
+import { BFAPI_HOST, byId, getGameTypeIndex, getGameTypeName, type BfApiError, type GameType, type NamedStub } from "../common";
 import { createAnchor, createRow } from "../dom_util";
 
 type CloudStats = {
@@ -50,39 +50,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 	populateScoreboard(byId<HTMLTableElement>("stat-scoreboard-players"), stats.player_scores, "player.html", "player", "/api/v1/player_data/bulk?stub=true");
 	populateScoreboard(byId<HTMLTableElement>("stat-scoreboard-clans"), stats.clan_scores, "clan.html", "clan", "/api/v1/clan_data/bulk?stub=true");
 });
-
-function getGameTypeIndex(gameType: GameType): number {
-	switch (gameType) {
-		case "boot":
-			return 0;
-		case "dom":
-			return 1;
-		case "of":
-			return 2;
-		case "tdm":
-			return 3;
-		case "gg":
-			return 4;
-		case "ffa":
-			return 5;
-		case "inf":
-			return 6;
-		case "sg":
-			return 7;
-		case "ttt":
-			return 8;
-		case "def":
-			return 9;
-		case "mov":
-			return 10;
-		case "camp":
-			return 11;
-		case "lob":
-			return 12;
-		default:
-			return 13;
-	}
-}
 
 function populateScoreboard(table: HTMLTableElement, entries: ScoreEntry[], hrefBase: string, idBase: string, bulkEndpoint: string) {
 	const unknownUuids: string[] = [];

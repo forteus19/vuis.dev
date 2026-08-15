@@ -28,6 +28,7 @@ export type GameType = "boot" | "dom" | "tdm" | "gg" | "ffa" | "of" | "inf" | "s
 
 export const BFAPI_HOST = "https://blockfrontapi.vuis.dev";
 // export const BFAPI_HOST = "http://localhost:19190";
+export const CLOUD_API_HOST = "https://api.blockfrontmc.com";
 export const PRESTIGE_EXP = 253_001;
 
 const LAST_SEARCH_KEY = "lastSearch";
@@ -100,5 +101,38 @@ export function getGameTypeName(gameType: GameType): string {
 			return "Lobby";
 		default:
 			return "Unknown";
+	}
+}
+
+export function getGameTypeIndex(gameType: GameType): number {
+	switch (gameType) {
+		case "boot":
+			return 0;
+		case "dom":
+			return 1;
+		case "of":
+			return 2;
+		case "tdm":
+			return 3;
+		case "gg":
+			return 4;
+		case "ffa":
+			return 5;
+		case "inf":
+			return 6;
+		case "sg":
+			return 7;
+		case "ttt":
+			return 8;
+		case "def":
+			return 9;
+		case "mov":
+			return 10;
+		case "camp":
+			return 11;
+		case "lob":
+			return 12;
+		default:
+			return 13;
 	}
 }

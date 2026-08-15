@@ -2,6 +2,10 @@ export function createBreak(): HTMLBRElement {
 	return document.createElement("br");
 }
 
+export function createSeparator(): HTMLHRElement {
+	return document.createElement("hr");
+}
+
 function createGenericText(tagName: string, text: string, color?: string): HTMLElement {
 	const element = document.createElement(tagName);
 	element.innerText = text;
@@ -10,6 +14,10 @@ function createGenericText(tagName: string, text: string, color?: string): HTMLE
 	}
 
 	return element;
+}
+
+export function createH3(text: string, color?: string): HTMLHeadingElement {
+	return createGenericText("h3", text, color) as HTMLHeadingElement;
 }
 
 export function createSpan(text: string, color?: string): HTMLSpanElement {

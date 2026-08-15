@@ -268,6 +268,10 @@ function buildClassExpTable(table: HTMLTableElement, entries: ClassExpEntry[]) {
 			continue;
 		}
 
-		table.appendChild(createRow({}, CLASS_NAMES[entry.id], entry.exp.toLocaleString()));
+		table.appendChild(createRow(
+			{},
+			CLASS_NAMES[entry.id],
+			entry.exp.toLocaleString()
+		));
 	}
 }
