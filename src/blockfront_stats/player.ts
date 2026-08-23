@@ -194,12 +194,12 @@ function load() {
 	setStat("headshots", stats.head_shots);
 	setRatio("khs", stats.head_shots, stats.kills);
 	setStat("kills", stats.kills);
-	if (stats.sb) {
-		setStat("sb-score", stats.sb.score, "#55FF55");
-		setStat("sb-rank", ` #${stats.sb.rank}`);
-	} else {
-		setStat("sb-score", "n/a", "#AAAAAA");
-	}
+	// if (stats.sb) {
+	// 	setStat("sb-score", stats.sb.score, "#55FF55");
+	// 	setStat("sb-rank", ` #${stats.sb.rank}`);
+	// } else {
+	// 	setStat("sb-score", "n/a", "#AAAAAA");
+	// }
 	setStat("killstreak", stats.highest_kill_streak);
 	setStat("firekills", stats.fire_kills);
 	setStat("backstabs", stats.back_stabs);

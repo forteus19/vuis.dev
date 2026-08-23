@@ -17,6 +17,7 @@ export default defineConfig({
 				resolve(__dirname, "blockfront_stats/map_stats.html"),
 				resolve(__dirname, "blockfront_stats/matches.html"),
 				resolve(__dirname, "blockfront_stats/player.html"),
+				resolve(__dirname, "blockfront_stats/scoreboards.html"),
 				// resolve(__dirname, "blockfront_stats/status.html"),
 				resolve(__dirname, "blockfront_stats/ucd/exp_leaderboard.html"),
 			],
