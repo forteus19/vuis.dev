@@ -68,6 +68,10 @@ hr {
 	margin-top: 6px;
 }
 
+.stat-block + .stat-block {
+	margin-top: 1em;
+}
+
 .flex-text {
 	display: flex;
 	align-items: center;

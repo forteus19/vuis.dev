@@ -22,36 +22,35 @@
 		<button id="show-button" hidden>Show anyways</button>
 
 		<div id="stats-content" hidden>
-			<p id="banned-message" hidden>
+			<div class="stat-block" id="banned-message" hidden>
 				<span style="color: #FF5555">Banned Player</span><br />
 				<span style="color: #AAAAAA">This player is currently banned from the cloud.</span>
-			</p>
+			</div>
 
-			<p id="scoreboard-message" hidden>
+			<div class="stat-block" id="scoreboard-message" hidden>
 				<b style="color: #FFFF55">Scoreboard Featured!</b><br />
 				<span style="color: #FFFF55">Featured on the official scoreboard!</span>
-			</p>
+			</div>
 
-			<p>
-				Group: <span id="stat-group"></span>
-			</p>
-
-			<p>
+			<div class="stat-block">
 				<div id="stat-rank" class="flex-text" style="margin-bottom: 2px">Rank:</div>
-				Progress: <span id="stat-progress-current" style="color: #AAAAAA"></span> / <span id="stat-progress-end" style="color: #AAAAAA"></span>
-			</p>
+				EXP Progress: <span id="stat-progress-current" style="color: #AAAAAA"></span> / <span id="stat-progress-end" style="color: #AAAAAA"></span><br />
+				EXP Remaining: <span id="stat-progress-remaining" style="color: #AAAAAA"></span>
+			</div>
 
-			<p>
+			<div class="stat-block">
+				Achievements: <span id="stat-achievements"></span><span style="color: #AAAAAA">/72</span>
+			</div>
+
+			<div class="stat-block">
+				Group: <span id="stat-group"></span><br />
+				EXP: <span id="stat-exp" style="color: #55FFFF"></span><br />
 				Match Karma: <span id="stat-matchkarma" style="color: #FF55FF"></span><br />
 				Time Played: <span id="stat-timeplayed" style="color: #AAAAAA"></span><br />
 				Games: <span id="stat-games" style="color: #AAAAAA"></span><br />
-				Trophies: <span id="stat-trophies" style="color: #FFFF55"></span><br />
-				Achievements: <span id="stat-achievements"></span><span style="color: #AAAAAA">/69</span>
-			</p>
+			</div>
 
-			<p>
-				EXP: <span id="stat-exp" style="color: #55FFFF"></span>
-				<span style="color: #AAAAAA">(total: <span id="stat-expcumulative" style="color: #55FFFF"></span><span id="stat-exprank" style="color: #FFFF55"></span>)</span><br />
+			<div class="stat-block">
 				K/D: <span id="stat-kd"></span><br />
 				Headshots: <span id="stat-headshots" style="color: #55FF55"></span><br />
 				K/HS: <span id="stat-khs"></span><br />
@@ -60,26 +59,28 @@
 				Fire Kills: <span id="stat-firekills" style="color: #55FF55"></span><br />
 				Back-stabs: <span id="stat-backstabs" style="color: #55FF55"></span><br />
 				Assists: <span id="stat-assists" style="color: #FFFF55"></span><br />
+				Heal Assists: <span id="stat-healassists" style="color: #55FF55"></span><br />
 				No-scopes: <span id="stat-noscopes" style="color: #55FF55"></span><br />
 				Deaths: <span id="stat-deaths" style="color: #FF5555"></span><br />
 				Death Streak: <span id="stat-deathstreak" style="color: #FF5555"></span><br />
 				First-bloods: <span id="stat-firstbloods" style="color: #AA0000"></span><br />
+				Wins: <span id="stat-trophies" style="color: #FFAA00"></span><br />
 				Prestige Level: <span id="stat-prestigelevel" style="color: #FFFF55"></span><br />
 				Completed Bootcamp: <span id="stat-completedbootcamp"></span>
-			</p>
+			</div>
 
-			<p>
+			<div class="stat-block">
 				Infected Rounds Won: <span id="stat-infectedroundswon" style="color: #FF5555"></span><br />
 				Infected Matches Won: <span id="stat-infectedmatcheswon" style="color: #FF5555"></span>
-			</p>
+			</div>
 
-			<p>
+			<div class="stat-block">
 				Bot Kills: <span id="stat-botkills" style="color: #5555FF"></span><br />
 				Infected Kills: <span id="stat-infectedkills" style="color: #55FF55"></span><br />
 				Vehicle Kills: <span id="stat-vehiclekills" style="color: #AAAAAA"></span>
-			</p>
+			</div>
 
-			<p>
+			<div class="stat-block">
 				<span style="color: #FF5555">Punishment Records</span><br />
 				Warnings: <span id="stat-warning" style="color: #FF5555"></span>
 				<span id="stat-warning-active" style="color: #AAAAAA" hidden>(active: <span id="stat-warning-count" style="color: #FF5555"></span>)</span><br />
@@ -87,11 +88,16 @@
 				<span id="stat-mute-active" style="color: #AAAAAA" hidden>(active: <span id="stat-mute-count" style="color: #FF5555"></span>)</span><br />
 				Bans: <span id="stat-ban" style="color: #FF5555"></span>
 				<span id="stat-ban-active" style="color: #AAAAAA" hidden>(active: <span id="stat-ban-count" style="color: #FF5555"></span>)</span><br />
-			</p>
+			</div>
 
-			<p>
+			<div class="stat-block">
+				<span style="color: #AAAAAA">Unofficial Stats</span><br />
+				Cumulative EXP: <span id="stat-expcumulative" style="color: #55FFFF"></span> <span id="stat-exprank" style="color: #FFFF55"></span><br />
+			</div>
+
+			<div class="stat-block">
 				<table id="stat-cexp"></table>
-			</p>
+			</div>
 		</div>
 
 		<script type="module" src="/src/common.ts"></script>

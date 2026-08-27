@@ -29,6 +29,7 @@ type PlayerStats = {
 	back_stabs: number;
 	head_shots: number;
 	no_scopes: number;
+	heal_assists: number;
 	first_bloods: number;
 	fire_kills: number;
 	highest_kill_streak: number;
@@ -67,7 +68,50 @@ type Punishments = {
 	ban?: number;
 };
 
-const RANK_THRESHOLDS = [0, 1, 1_001, 3_001, 6_001, 10_001, 16_001, 23_501, 32_501, 43_001, 55_001, 69_001, 85_001, 103_001, 123_001, 145_001, 169_001, 195_001, 223_001, 253_001];
+const RANK_THRESHOLDS = [
+	0,
+	1,
+	1_001,
+	3_001,
+	6_001,
+	10_001,
+	16_001,
+	23_501,
+	32_501,
+	43_001,
+	55_001,
+	69_001,
+	85_001,
+	103_001,
+	123_001,
+	145_001,
+	169_001,
+	195_001,
+	223_001,
+	253_001
+];
+const RANK_NAMES = [
+	"Recruit",
+	"Private",
+	"Pvt. 2nd Class",
+	"Pvt. 1st Class",
+	"Corporal",
+	"Sergeant",
+	"Staff Sgt.",
+	"Sgt. 1st Class",
+	"Master Sgt.",
+	"1st Sergeant",
+	"2nd Lieutenant",
+	"1st Lieutenant",
+	"Captain",
+	"Major",
+	"Lt. Colonel",
+	"Colonel",
+	"Bgt. General",
+	"Maj. General",
+	"Lt. General",
+	"General"
+]
 
 const CLASS_NAMES = ["Rifleman", "Lt. Rifle", "Assault", "Support", "Medic", "Sniper", "Gunner", "Anti-Tank", "Specialist", "Commander"];
 
@@ -167,29 +211,27 @@ function load() {
 		byId("scoreboard-message").hidden = false;
 	}
 
-	setStat("group", stats.group ? stats.group.tag : "None", stats.group ? intToHexColor(stats.group.color) : "#AAAAAA");
-
 	const rankIndex = getRankIndex(stats.exp);
 
 	const rankElement = byId("stat-rank");
 	if (stats.prestige) {
 		rankElement.appendChild(createSpan(`P${stats.prestige}`, "#92FF7A"));
 	}
-	rankElement.append(createSpan(stats.rank, "white"), createImage(RANK_IMAGES[rankIndex]));
-	setStat("progress-current", stats.exp - RANK_THRESHOLDS[rankIndex]);
-	setStat("progress-end", rankIndex !== RANK_THRESHOLDS.length - 1 ? RANK_THRESHOLDS[rankIndex + 1] - RANK_THRESHOLDS[rankIndex] : 0);
+	rankElement.append(createSpan(RANK_NAMES[rankIndex], "white"), createImage(RANK_IMAGES[rankIndex]));
+	const progressCurrent = stats.exp - RANK_THRESHOLDS[rankIndex];
+	const progressEnd = rankIndex !== RANK_THRESHOLDS.length - 1 ? RANK_THRESHOLDS[rankIndex + 1] - RANK_THRESHOLDS[rankIndex] : 0;
+	setStat("progress-current", progressCurrent);
+	setStat("progress-end", progressEnd);
+	setStat("progress-remaining", progressEnd ? progressEnd - progressCurrent : 0);
 
+	setStat("achievements", stats.achievements, stats.achievements >= 72 ? "#55FF55" : "#FFFF55");
+
+	setStat("group", stats.group ? stats.group.tag : "None", stats.group ? intToHexColor(stats.group.color) : "#AAAAAA");
+	setStat("exp", stats.exp);
 	setStat("matchkarma", stats.match_karma);
 	setStat("timeplayed", `${(stats.time_played / 3600).toFixed(1)}h`);
 	setStat("games", stats.total_games);
-	setStat("trophies", stats.trophies);
-	setStat("achievements", stats.achievements, stats.achievements >= 69 ? "#55FF55" : "#FFFF55");
 
-	setStat("exp", stats.exp);
-	setStat("expcumulative", stats.prestige * PRESTIGE_EXP + stats.exp);
-	if (stats.ucd.exp_rank) {
-		setStat("exprank", ` #${stats.ucd.exp_rank}`);
-	}
 	setRatio("kd", stats.kills, stats.deaths);
 	setStat("headshots", stats.head_shots);
 	setRatio("khs", stats.head_shots, stats.kills);
@@ -204,10 +246,12 @@ function load() {
 	setStat("firekills", stats.fire_kills);
 	setStat("backstabs", stats.back_stabs);
 	setStat("assists", stats.assists);
+	setStat("healassists", stats.heal_assists);
 	setStat("noscopes", stats.no_scopes);
 	setStat("deaths", stats.deaths);
 	setStat("deathstreak", stats.highest_death_streak);
 	setStat("firstbloods", stats.first_bloods);
+	setStat("trophies", stats.trophies);
 	setStat("prestigelevel", stats.prestige);
 	setStat("completedbootcamp", stats.bootcamp ? "Yes" : "No", stats.bootcamp ? "#55FF55" : "#FF5555");
 
@@ -227,6 +271,11 @@ function load() {
 			byId(`stat-${field}-active`).hidden = false;
 			setStat(field + "-count", active);
 		}
+	}
+
+	setStat("expcumulative", stats.prestige * PRESTIGE_EXP + stats.exp);
+	if (stats.ucd.exp_rank) {
+		setStat("exprank", ` #${stats.ucd.exp_rank}`);
 	}
 
 	buildClassExpTable(byId<HTMLTableElement>("stat-cexp"), stats.class_exp);
