@@ -44,6 +44,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 	const gameTypeTable = byId<HTMLTableElement>("stat-gmonline");
 	for (const [gameType, count] of gamePlayerCountEntries) {
-		gameTypeTable.appendChild(createRow({}, { contents: getGameTypeName(gameType), width: "150px" }, { contents: count.toLocaleString(), width: "50px" }));
+		gameTypeTable.appendChild(
+			createRow(
+				{},
+				{ contents: getGameTypeName(gameType), width: "150px" },
+				{ contents: count.toLocaleString(), width: "50px" }
+			)
+		);
 	}
 });

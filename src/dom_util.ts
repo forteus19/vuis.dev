@@ -114,3 +114,10 @@ export function createRow(options: { header?: boolean; color?: string }, ...colu
 
 	return row;
 }
+
+export function createAvatarElement(uuid: string): HTMLImageElement {
+	const element = document.createElement("img");
+	element.src = `https://mc-heads.net/avatar/${uuid}/24`;
+
+	return element;
+}

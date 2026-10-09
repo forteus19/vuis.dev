@@ -1,5 +1,5 @@
-import { BFAPI_HOST, byId, createAvatarElement, retrieveLastUsername, setLastSearch, type BfApiError, type NamedStub } from "../common";
-import { createOption, createRow } from "../dom_util";
+import { BFAPI_HOST, byId, retrieveLastUsername, setLastSearch, type BfApiError, type NamedStub } from "../common";
+import { createAvatarElement, createOption, createRow } from "../dom_util";
 
 type MatchResult = "win" | "loss" | "draw";
 
@@ -63,7 +63,7 @@ const COMPARATORS: ((a: MatchSummary, b: MatchSummary) => number)[] = [
 ];
 
 const SPECIAL_MAPS = new Set([
-	"Beached", "Caen", "Cliffside", "Danzig", "Frostbite", "Hacksaw", "Kasserine", "Mammut", "Polvere", "Range", "Saints", "Tenaru", "Trainyard"
+	"Beached", "Caen", "Cliffside", "Crossroads", "Danzig", "Frostbite", "Hacksaw", "Kasserine", "Mammut", "Polvere", "Range", "Saints", "Tenaru", "Trainyard"
 ]);
 
 const TIME_UNITS: [string, number][] = [

@@ -1,5 +1,5 @@
-import { BFAPI_HOST, byId, createAvatarElement, retrieveLastUsername, setLastSearch, type BfApiError, type NamedStub } from "../common";
-import { createRow } from "../dom_util";
+import { BFAPI_HOST, byId, retrieveLastUsername, setLastSearch, type BfApiError, type NamedStub } from "../common";
+import { createAvatarElement, createRow } from "../dom_util";
 
 type ItemDetails = [name: string, rarity: number, itemType: number, mcIdIndex?: number, skinId?: number, patternIndex?: number];
 type McDetails = [id: string, capacity: number, maxAmmo: number];

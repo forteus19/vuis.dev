@@ -1,5 +1,6 @@
-import { BFAPI_HOST, byId, createAvatarElement, intToHexColor, PRESTIGE_EXP, retrieveLastUsername, setLastSearch, type BfApiError } from "../common";
-import { createImage, createRow, createSpan } from "../dom_util";
+import { BFAPI_HOST, byId, intToHexColor, PRESTIGE_EXP, retrieveLastUsername, setLastSearch, type BfApiError, type SkillRank } from "../common";
+import { createAvatarElement, createImage, createRow, createSpan } from "../dom_util";
+import { createSkillRankElement } from "./skill_rank";
 
 const RANK_IMAGES = Object.entries(import.meta.glob("../assets/bf_ranks/*.png", { eager: true, query: "?url", import: "default" }))
 	.sort(([a], [b]) => a.localeCompare(b, undefined, { numeric: true }))
@@ -30,6 +31,9 @@ type PlayerStats = {
 	head_shots: number;
 	no_scopes: number;
 	heal_assists: number;
+	captures: number;
+	objective_score: number;
+	skill_rank: SkillRank | null;
 	first_bloods: number;
 	fire_kills: number;
 	highest_kill_streak: number;
@@ -111,9 +115,20 @@ const RANK_NAMES = [
 	"Maj. General",
 	"Lt. General",
 	"General"
-]
+];
 
-const CLASS_NAMES = ["Rifleman", "Lt. Rifle", "Assault", "Support", "Medic", "Sniper", "Gunner", "Anti-Tank", "Specialist", "Commander"];
+const CLASS_NAMES = [
+	"Rifleman",
+	"Lt. Rifle",
+	"Assault",
+	"Support",
+	"Medic",
+	"Sniper",
+	"Gunner",
+	"Anti-Tank",
+	"Specialist",
+	"Commander"
+];
 
 let stats: PlayerStats | null = null;
 
@@ -211,26 +226,31 @@ function load() {
 		byId("scoreboard-message").hidden = false;
 	}
 
+	setStat("group", stats.group ? stats.group.tag : "None", stats.group ? intToHexColor(stats.group.color) : "#AAAAAA");
+
 	const rankIndex = getRankIndex(stats.exp);
 
 	const rankElement = byId("stat-rank");
 	if (stats.prestige) {
 		rankElement.appendChild(createSpan(`P${stats.prestige}`, "#92FF7A"));
 	}
-	rankElement.append(createSpan(RANK_NAMES[rankIndex], "white"), createImage(RANK_IMAGES[rankIndex]));
+	rankElement.append(
+		createSpan(RANK_NAMES[rankIndex], "white"),
+		createImage(RANK_IMAGES[rankIndex])
+	);
 	const progressCurrent = stats.exp - RANK_THRESHOLDS[rankIndex];
 	const progressEnd = rankIndex !== RANK_THRESHOLDS.length - 1 ? RANK_THRESHOLDS[rankIndex + 1] - RANK_THRESHOLDS[rankIndex] : 0;
 	setStat("progress-current", progressCurrent);
 	setStat("progress-end", progressEnd);
 	setStat("progress-remaining", progressEnd ? progressEnd - progressCurrent : 0);
 
-	setStat("achievements", stats.achievements, stats.achievements >= 72 ? "#55FF55" : "#FFFF55");
+	byId("stat-skillrank").append(createSkillRankElement(stats.skill_rank));
 
-	setStat("group", stats.group ? stats.group.tag : "None", stats.group ? intToHexColor(stats.group.color) : "#AAAAAA");
 	setStat("exp", stats.exp);
 	setStat("matchkarma", stats.match_karma);
 	setStat("timeplayed", `${(stats.time_played / 3600).toFixed(1)}h`);
 	setStat("games", stats.total_games);
+	setStat("achievements", stats.achievements, stats.achievements >= 72 ? "#55FF55" : "#FFFF55");
 
 	setRatio("kd", stats.kills, stats.deaths);
 	setStat("headshots", stats.head_shots);
@@ -254,6 +274,9 @@ function load() {
 	setStat("trophies", stats.trophies);
 	setStat("prestigelevel", stats.prestige);
 	setStat("completedbootcamp", stats.bootcamp ? "Yes" : "No", stats.bootcamp ? "#55FF55" : "#FF5555");
+
+	setStat("captures", stats.captures);
+	setStat("objectivescore", stats.objective_score);
 
 	setStat("infectedroundswon", stats.infected_rounds_won);
 	setStat("infectedmatcheswon", stats.infected_matches_won);

@@ -26,6 +26,12 @@ export type LastSearch = {
 
 export type GameType = "boot" | "dom" | "tdm" | "gg" | "ffa" | "of" | "inf" | "sg" | "ttt" | "def" | "mov" | "camp" | "lob";
 
+export type SkillRank = {
+	index: number;
+	title: string;
+	color: string;
+};
+
 export const BFAPI_HOST = "https://blockfrontapi.vuis.dev";
 // export const BFAPI_HOST = "http://localhost:19190";
 export const CLOUD_API_HOST = "https://api.blockfrontmc.com";
@@ -62,13 +68,6 @@ export function retrieveLastUsername(expectedUuid: string): string | null {
 		clearLastSearch();
 		return null;
 	}
-}
-
-export function createAvatarElement(uuid: string): HTMLImageElement {
-	const element = document.createElement("img");
-	element.src = `https://mc-heads.net/avatar/${uuid}/24`;
-
-	return element;
 }
 
 export function getGameTypeName(gameType: GameType): string {
@@ -112,19 +111,19 @@ export function getGameTypeIndex(gameType: GameType): number {
 			return 1;
 		case "of":
 			return 2;
-		case "tdm":
-			return 3;
-		case "gg":
-			return 4;
-		case "ffa":
-			return 5;
-		case "inf":
-			return 6;
-		case "sg":
-			return 7;
-		case "ttt":
-			return 8;
 		case "def":
+			return 3;
+		case "tdm":
+			return 4;
+		case "gg":
+			return 5;
+		case "ffa":
+			return 6;
+		case "inf":
+			return 7;
+		case "sg":
+			return 8;
+		case "ttt":
 			return 9;
 		case "mov":
 			return 10;

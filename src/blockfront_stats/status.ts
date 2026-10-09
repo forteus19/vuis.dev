@@ -1,5 +1,5 @@
-import { BFAPI_HOST, byId, createAvatarElement, formatStub, getGameTypeName, retrieveLastUsername, setLastSearch, type BfApiError, type GameType, type NamedStub } from "../common";
-import { createAnchor, createListItem } from "../dom_util";
+import { BFAPI_HOST, byId, formatStub, getGameTypeName, retrieveLastUsername, setLastSearch, type BfApiError, type GameType, type NamedStub } from "../common";
+import { createAnchor, createAvatarElement, createListItem } from "../dom_util";
 
 type Status = {
 	online: boolean;
